@@ -1,0 +1,28 @@
+{
+  "name": "academy_it",
+  "version": "1.0.0",
+  "description": "Servidor de endpoint para la academis IT",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev2": "nodemon ./src/server.js",
+    "dev": "cross-env NODE_ENV=Desarrollo nodemon ./src/server.js",
+    "start": "cross-env NODE_ENV=production node ./src/server.js"
+  },
+  "author": "Curso FullStack",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "express": "^4.18.3",
+    "nodemailer": "^6.9.12",
+    "qrcode": "^1.5.3",
+    "react-icons": "^5.0.1",
+    "sweetalert2": "^11.10.6"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0"
+  }
+}
