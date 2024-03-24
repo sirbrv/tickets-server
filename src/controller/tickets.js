@@ -46,6 +46,9 @@ const getTicket = async (req, res) => {
   }
 };
 
+/* *******************************************************/
+/* **     Sección de  besqueda de tickets por codigo     */
+/* *******************************************************/
 const getTicketCodigo = async (req, res) => {
   let codigo = parseInt(req.params.codigo);
 
@@ -113,6 +116,34 @@ const AddTicket = async (req, res) => {
     nuevoticket.id = id;
     tickets.push(nuevoticket);
     await fs.writeFile(ventaTicketsFile, JSON.stringify(tickets));
+
+    // *************************************************//
+    // Se actualiza catalogo de Tickets
+    // *************************************************//
+    const fsDatos = await fs.readFile(ticketsFile, "utf-8");
+    const fstickets = JSON.parse(fsDatos);
+    const fsTicket = fstickets.find(
+      (ticket) => ticket.codigoEntrada == req.body.codigoEntrada
+    );
+    let ticketID = null;
+    if (fsTicket) {
+      ticketID = fsTicket.id;
+      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.nomtoPago);
+      fsTicket.montoPagado = req.body.nomtoPago;
+      fsTicket.estatus = "Vendida";
+      if (saldo) {
+        fsTicket.estatusPago = "pendiente";
+      } else {
+        fsTicket.estatusPago = "pagada";
+      }
+      fsTicket.comprador = req.body.nombreComprador;
+    }
+    const index2 = fstickets.findIndex((item) => item.id === ticketID);
+    if (index2 >= 0) {
+      fstickets[index2] = fsTicket;
+      await fs.writeFile(ticketsFile, JSON.stringify(fstickets));
+    }
+    // **********************fin ***************************//
     return res.status(201).send({
       data: nuevoticket,
       message: "Venta realizada de forma éxitosa",
@@ -170,6 +201,32 @@ const updateTicket = async (req, res) => {
       tickets[index] = nuevoDato;
       await fs.writeFile(ticketsFile, JSON.stringify(tickets));
     }
+    // *************************************************//
+    // Se actualiza catalogo de Tickets
+    // *************************************************//
+    const fsDatos = await fs.readFile(ticketsFile, "utf-8");
+    const fstickets = JSON.parse(fsDatos);
+    const fsTicket = fstickets.find(
+      (ticket) => ticket.codigoEntrada == req.body.codigoEntrada
+    );
+    let ticketID = null;
+    if (fsTicket) {
+      ticketID = fsTicket.id;
+      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.nomtoPago);
+      fsTicket.montoPagado = req.body.nomtoPago;
+      if (saldo) {
+        fsTicket.estatusPago = "pendiente";
+      } else {
+        fsTicket.estatusPago = "pagada";
+      }
+      fsTicket.comprador = req.body.nombreComprador;
+    }
+    const index2 = fstickets.findIndex((item) => item.id === ticketID);
+    if (index2 >= 0) {
+      fstickets[index2] = fsTicket;
+      await fs.writeFile(ticketsFile, JSON.stringify(fstickets));
+    }
+    // **********************fin ***************************//
     return res
       .status(200)
       .json({ data: nuevoDato, message: "Registro Actualizado", exito: true });
@@ -182,6 +239,9 @@ const updateTicket = async (req, res) => {
   }
 };
 
+/* *******************************************************/
+/* **          Sección de generacion de Tickets          */
+/* *******************************************************/
 const generaTicket = async (req, res) => {
   const { academia, correlativo, inicial, final, tipoEntrada, costo } =
     req.body;
@@ -205,14 +265,17 @@ const generaTicket = async (req, res) => {
     }
     let newticket = {
       id: lastId + 1,
+      codigoEntrada: codEntrada, // Generar el código de entrada
       academia: academia,
+      urlAcademia: datoAcademia.url,
       evento: req.body.evento,
       tipoEntrada: tipoEntrada,
       costo: costo,
       estatus: "Generada", // Estatus: Tickets generado //
       responsable: "", // falta traer de catalogo de asignacion
-      codigoEntrada: codEntrada, // Generar el código de entrada
-      urlAcademia: datoAcademia.url,
+      montoPagado: "",
+      estatusPago: "",
+      comprador: "",
     };
     tickets.push(newticket);
     lastId++;
@@ -225,20 +288,10 @@ const generaTicket = async (req, res) => {
   });
 };
 
+/* *******************************************************/
+/* **          Sección de  envio de correos              */
+/* *******************************************************/
 const enviaTicket = async (req, res) => {
-  // let nuevoticket = {
-  //   id: parseInt(req.body.id),
-  //   codigoEntrada: req.body.codigoEntrada,
-  //   academia: req.body.academia,
-  //   evento: req.body.evento,
-  //   emailComprador: req.body.emailComprador,
-  //   nombreComprador: req.body.nombreComprador,
-  //   metodoPago: req.body.metodoPago,
-  //   costo: req.body.costo,
-  //   responsable: req.body.responsable,
-  //   nomtoPago: req.body.nomtoPago,
-  //   formaPago: req.body.formaPago,
-  // };
   enviarMail({
     url: req.body.urlAcademy,
     numTicket: req.body.codigoEntrada,
@@ -249,12 +302,45 @@ const enviaTicket = async (req, res) => {
   });
 };
 
-const enviaCorreo = (email) => {};
+//* *************************************************************** *//
+//                 Verifica datos escaneados en el QR               //
+//* *************************************************************** *//
+const getVefify = async (req, res) => {
+  const datos = await fs.readFile(ticketsFile, "utf-8");
+  const tickets = JSON.parse(datos);
+
+  const ticket = tickets.find(
+    (ticket) => ticket.codigoEntrada == req.params.codigo
+  );
+
+  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.nomtoPago);
+
+  let html = `<div style="padding: 20px 20px; font-size: 10px">
+          <h1 style="text-align: center;"> Verificación de Entradas</><bR>
+          <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+          <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
+          </div>
+          `;
+
+  if ((ticket.estatusPago = "pendiente")) {
+    html = `<div style="padding: 20px 50px; font-size: 10px">
+                <h1 style="text-align: center; ">Verificación de Entradas</><bR>
+                
+                <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+                <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
+                <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
+            
+                <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+            </div>
+
+            `;
+  }
+  return res.status(200).send(html);
+};
 
 //* *************************************************************** *//
 //       se genera ID en funcion a los regisatro del archivo         //
 //* *************************************************************** *//
-
 function getNextId(data) {
   if (data.length === 0) {
     return 1;
@@ -262,40 +348,6 @@ function getNextId(data) {
   let maxId = Math.max(...data.map((item) => item.id));
   return maxId + 1;
 }
-
-const getVefify = async (req, res) => {
-  console.log(req.params.codigo);
-  const datos = await fs.readFile(ticketsFile, "utf-8");
-  const tickets = JSON.parse(datos);
-  console.log(tickets);
-  const ticket = tickets.find(
-    (ticket) => ticket.codigoEntrada == req.params.codigo
-  );
-
-  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoAbonado);
-
-  let html = "";
-  html = `<div style="padding: 20px 20px; font-size: 10px">
-          <h1 style="text-align: center;"> Verificación de Entradas</><bR>
-          <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-          <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
-          </div>
-          `;
-  if ((ticket.estatusPago = "pendiente")) {
-    html = `<div style="padding: 20px 50px; font-size: 10px">
-              <h1 style="text-align: center; ">Verificación de Entradas</><bR>
-              
-              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-              <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
-              <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
-          
-              <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-          </div>
-
-          `;
-  }
-  return res.status(200).send(html);
-};
 
 module.exports = {
   getTickets,

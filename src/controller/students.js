@@ -1,5 +1,6 @@
 const fs = require("fs").promises;
 const studentsFile = "src/json/students.json";
+const ticketsFile = "src/json/tickets.json";
 
 //* *************************************************************** *//
 //       definición de rutas  de acceso a archivo students           //
@@ -16,12 +17,15 @@ const getStudents = async (req, res) => {
     }, 10);
     return;
   } catch (error) {
-    console.log("Este es el error....:", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getStudent = async (req, res) => {
-  console.log("id.....", req.params);
   let id = parseInt(req.params.id);
   try {
     const datos = await fs.readFile(studentsFile, "utf-8");
@@ -31,18 +35,20 @@ const getStudent = async (req, res) => {
       .status(200)
       .json([{ data: student, message: "Consulta Exitosa", exito: true }]);
   } catch (error) {
-    console.log("Error en consilta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getStudentDni = async (req, res) => {
-  console.log("Dni.....", req.params);
   let dni = parseInt(req.params.dni);
   try {
     const datos = await fs.readFile(studentsFile, "utf-8");
     const students = JSON.parse(datos);
     const student = students.find((student) => student.dni == dni);
-    console.log(student);
     let messageResult = "";
     let status = false;
     if (student === undefined) {
@@ -56,13 +62,66 @@ const getStudentDni = async (req, res) => {
       .status(200)
       .json({ data: student, message: messageResult, exito: status });
   } catch (error) {
-    console.log("Error en consulta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const AddStudent = async (req, res) => {
-  console.log("Entre a addStudent");
-  console.log(req.body);
+  let numOb = 0;
+  let numEx = 0;
+  if (req.body.ticketOb1) {
+    await grabaTicket(req.body.ticketOb1, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb2) {
+    await grabaTicket(req.body.ticketOb2, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb3) {
+    await grabaTicket(req.body.ticketOb3, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb4) {
+    await grabaTicket(req.body.ticketOb4, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb5) {
+    await grabaTicket(req.body.ticketOb5, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb6) {
+    await grabaTicket(req.body.ticketOb6, req.body.nombre);
+    numOb = numOb + 1;
+  }
+
+  if (req.body.ticketEx1) {
+    await grabaTicket(req.body.ticketEx1, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx2) {
+    await grabaTicket(req.body.ticketEx2, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx3) {
+    await grabaTicket(req.body.ticketEx3, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx4) {
+    await grabaTicket(req.body.ticketEx4, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx5) {
+    await grabaTicket(req.body.ticketEx5, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx6) {
+    await grabaTicket(req.body.ticketEx6, req.body.nombre);
+    numEx = numEx + 1;
+  }
   let nuevostudent = {
     id: parseInt(req.body.id),
     dni: req.body.dni,
@@ -70,15 +129,27 @@ const AddStudent = async (req, res) => {
     email: req.body.email,
     celular: req.body.celular,
     adress: req.body.adress,
+    EntObligatorias: numOb,
+    EntExtras: numEx,
     academia: req.body.academia,
+    ticketOb1: req.body.ticketOb1,
+    ticketOb2: req.body.ticketOb2,
+    ticketOb3: req.body.ticketOb3,
+    ticketOb4: req.body.ticketOb4,
+    ticketOb5: req.body.ticketOb5,
+    ticketOb6: req.body.ticketOb6,
+    ticketEx1: req.body.ticketEx1,
+    ticketEx2: req.body.ticketEx2,
+    ticketEx3: req.body.ticketEx3,
+    ticketEx4: req.body.ticketEx4,
+    ticketEx5: req.body.ticketEx5,
+    ticketEx6: req.body.ticketEx6,
   };
 
   try {
-    console.log("en el tray");
     const datos = await fs.readFile(studentsFile, "utf-8");
     const students = JSON.parse(datos);
     const student = students.find((student) => student.dni == req.body.dni);
-    console.log("en el tray....", student);
     if (student) {
       return res.status(400).send({
         data: "",
@@ -86,7 +157,6 @@ const AddStudent = async (req, res) => {
         exito: false,
       });
     }
-    console.log("pase");
     let id = getNextId(students);
     nuevostudent.id = id;
     students.push(nuevostudent);
@@ -97,7 +167,11 @@ const AddStudent = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -116,13 +190,67 @@ const deleteStudent = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const updateStudent = async (req, res) => {
-  console.log(req.body);
   let id = parseInt(req.params.id);
+  let numOb = 0;
+  let numEx = 0;
+  if (req.body.ticketOb1) {
+    await grabaTicket(req.body.ticketOb1, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb2) {
+    await grabaTicket(req.body.ticketOb2, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb3) {
+    await grabaTicket(req.body.ticketOb3, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb4) {
+    await grabaTicket(req.body.ticketOb4, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb5) {
+    await grabaTicket(req.body.ticketOb5, req.body.nombre);
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb6) {
+    await grabaTicket(req.body.ticketOb6, req.body.nombre);
+    numOb = numOb + 1;
+  }
+
+  if (req.body.ticketEx1) {
+    await grabaTicket(req.body.ticketEx1, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx2) {
+    await grabaTicket(req.body.ticketEx2, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx3) {
+    await grabaTicket(req.body.ticketEx3, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx4) {
+    await grabaTicket(req.body.ticketEx4, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx5) {
+    await grabaTicket(req.body.ticketEx5, req.body.nombre);
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx6) {
+    await grabaTicket(req.body.ticketEx6, req.body.nombre);
+    numEx = numEx + 1;
+  }
   let nuevoDato = {
     id: parseInt(req.body.id),
     dni: req.body.dni,
@@ -130,25 +258,64 @@ const updateStudent = async (req, res) => {
     email: req.body.email,
     celular: req.body.celular,
     adress: req.body.adress,
+    EntObligatorias: numOb,
+    EntExtras: numEx,
     academia: req.body.academia,
+    ticketOb1: req.body.ticketOb1,
+    ticketOb2: req.body.ticketOb2,
+    ticketOb3: req.body.ticketOb3,
+    ticketOb4: req.body.ticketOb4,
+    ticketOb5: req.body.ticketOb5,
+    ticketOb6: req.body.ticketOb6,
+    ticketEx1: req.body.ticketEx1,
+    ticketEx2: req.body.ticketEx2,
+    ticketEx3: req.body.ticketEx3,
+    ticketEx4: req.body.ticketEx4,
+    ticketEx5: req.body.ticketEx5,
+    ticketEx6: req.body.ticketEx6,
   };
   try {
     const datos = await fs.readFile(studentsFile, "utf-8");
     const students = JSON.parse(datos);
-    console.log("Id....:", id);
     const index = students.findIndex((item) => parseInt(item.id) == id);
-    console.log("index...", index);
     if (index >= 0) {
       students[index] = nuevoDato;
       await fs.writeFile(studentsFile, JSON.stringify(students));
     }
-    console.log("students.....", nuevoDato);
     return res
       .status(200)
       .json({ data: nuevoDato, message: "Registro Actualizado", exito: true });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
+};
+
+const grabaTicket = async (ticketNum, nombre) => {
+  // *************************************************//
+  // Se actualiza catalogo de Tickets
+  // *************************************************//
+  const fsDatos = await fs.readFile(ticketsFile, "utf-8");
+  const fstickets = JSON.parse(fsDatos);
+  const fsTicket = fstickets.find(
+    (ticket) => ticket.codigoEntrada == ticketNum
+  );
+  let ticketID = null;
+  if (fsTicket) {
+    ticketID = fsTicket.id;
+    fsTicket.estatus = "Asignada";
+    fsTicket.responsable = nombre;
+  }
+  const index2 = fstickets.findIndex((item) => item.id === ticketID);
+
+  if (index2 >= 0) {
+    fstickets[index2] = fsTicket;
+    await fs.writeFile(ticketsFile, JSON.stringify(fstickets));
+  }
+  // **********************fin ***************************//
 };
 
 //* *************************************************************** *//
