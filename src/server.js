@@ -28,5 +28,6 @@ app.use((red, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Servidor disponible en  ${host}:${port}`);
+  // console.log(`Servidor disponible en  ${host}:${port}`);
+  console.log(`Servidor disponible en el puerto :${port}`);
 });
