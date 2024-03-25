@@ -11,6 +11,7 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
+/*   Rutas del Sistemas  */
 app.get("/", (req, res) => {
   res.status(200).sendFile(__dirname + "/public/html/welcome.html");
 });
