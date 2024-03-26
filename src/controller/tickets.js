@@ -264,7 +264,7 @@ const generaTicket = async (req, res) => {
       codEntrada = `${correlativo}-${i}`;
     }
     let newticket = {
-      id: lastId + 1,
+      id: lastId + 1, 
       codigoEntrada: codEntrada, // Generar el código de entrada
       academia: academia,
       urlAcademia: datoAcademia.url,

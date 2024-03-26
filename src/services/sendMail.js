@@ -2,10 +2,11 @@ const nodemailer = require("nodemailer");
 const QRCode = require("qrcode");
 const fs = require("fs");
 const enviarMail = async (options) => {
-  try {
+  // https://tickets-server.onrender.com
+  https: try {
     // Generar el código QR de forma asíncrona
     const imgData = await QRCode.toDataURL(
-      `http://${options.url}/api/verify/${options.numTicket}`
+      `https://${options.url}/api/verify/${options.numTicket}`
     );
     fs.writeFileSync("qr.pgn", `${imgData}`);
 
