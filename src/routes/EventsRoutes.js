@@ -21,7 +21,6 @@ router.put("/event/:id", validarData, updateEvent);
 router.delete("/event/:id", deleteEvent);
 
 function validarData(req, res, next) {
-  console.log("Body....", req.body);
   // const { codigo, nombre, descripcion } = req.body;
 
   // if (!codigo) {

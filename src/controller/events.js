@@ -16,12 +16,15 @@ const getEvents = async (req, res) => {
     }, 10);
     return;
   } catch (error) {
-    console.log("Este es el error....:", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getEvent = async (req, res) => {
-  console.log("id.....", req.params);
   let id = parseInt(req.params.id);
   try {
     const datos = await fs.readFile(eventsFile, "utf-8");
@@ -31,18 +34,20 @@ const getEvent = async (req, res) => {
       .status(200)
       .json([{ data: event, message: "Consulta Exitosa", exito: true }]);
   } catch (error) {
-    console.log("Error en consilta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getEventCodigo = async (req, res) => {
-  console.log("codigo.....", req.params);
   let codigo = parseInt(req.params.codigo);
   try {
     const datos = await fs.readFile(eventsFile, "utf-8");
     const events = JSON.parse(datos);
     const event = events.find((event) => event.codigo == codigo);
-    console.log(event);
     let messageResult = "";
     let status = false;
     if (event === undefined) {
@@ -56,13 +61,15 @@ const getEventCodigo = async (req, res) => {
       .status(200)
       .json({ data: event, message: messageResult, exito: status });
   } catch (error) {
-    console.log("Error en consulta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const AddEvent = async (req, res) => {
-  console.log("Entre a addevent");
-  console.log(req.body);
   let nuevoevent = {
     id: parseInt(req.body.id),
     codigo: req.body.codigo,
@@ -74,11 +81,9 @@ const AddEvent = async (req, res) => {
   };
 
   try {
-    console.log("en el tray");
     const datos = await fs.readFile(eventsFile, "utf-8");
     const events = JSON.parse(datos);
     const event = events.find((event) => event.codigo == req.body.codigo);
-    console.log("en el tray....", event);
     if (event) {
       return res.status(400).send({
         data: "",
@@ -86,7 +91,6 @@ const AddEvent = async (req, res) => {
         exito: false,
       });
     }
-    console.log("pase");
     let id = getNextId(events);
     nuevoevent.id = id;
     events.push(nuevoevent);
@@ -97,7 +101,11 @@ const AddEvent = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -116,12 +124,15 @@ const deleteEvent = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const updateEvent = async (req, res) => {
-  console.log(req.body);
   let id = parseInt(req.params.id);
   let nuevoDato = {
     id: parseInt(req.body.id),
@@ -135,19 +146,20 @@ const updateEvent = async (req, res) => {
   try {
     const datos = await fs.readFile(eventsFile, "utf-8");
     const events = JSON.parse(datos);
-    console.log("Id....:", id);
     const index = events.findIndex((item) => parseInt(item.id) == id);
-    console.log("index...", index);
     if (index >= 0) {
       events[index] = nuevoDato;
       await fs.writeFile(eventsFile, JSON.stringify(events));
     }
-    console.log("events.....", nuevoDato);
     return res
       .status(200)
       .json({ data: nuevoDato, message: "Registro Actualizado", exito: true });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 

@@ -306,18 +306,13 @@ const enviaTicket = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 const getVefify = async (req, res) => {
-  console.log("entoy aqui...:", req.params.codigo);
   const datos = await fs.readFile(ticketsFile, "utf-8");
   const tickets = JSON.parse(datos);
 
   const ticket = tickets.find(
     (ticket) => ticket.codigoEntrada == req.params.codigo
   );
-  console.log(tickets);
-  console.log("costo....:", parseFloat(ticket.costo));
-  console.log("montoPago....:", parseFloat(ticket.montoPagado));
   let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
-  console.log("montoPago....:", parseFloat(saldo));
 
   let html = `<div style="padding: 20px 20px; font-size: 10px">
           <h1 style="text-align: center;"> Verificación de Entradas</><bR>

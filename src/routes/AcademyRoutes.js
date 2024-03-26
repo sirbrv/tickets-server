@@ -21,7 +21,6 @@ router.put("/academy/:id", validarData, updateAcademy);
 router.delete("/academy/:id", deleteAcademy);
 
 function validarData(req, res, next) {
-  console.log("Body....", req.body);
   const { codigo, nombre, descripcion } = req.body;
 
   if (!codigo) {

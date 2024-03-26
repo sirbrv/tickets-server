@@ -12,7 +12,11 @@ const getContacts = async (req, res) => {
     res.send({ data: contacts, message: "Consulta exitosa" }).status(200);
     return;
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -33,7 +37,11 @@ const getContact = async (req, res) => {
     }
     return;
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -56,7 +64,11 @@ const delContact = async (req, res) => {
     }
     return;
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -65,7 +77,6 @@ const delContact = async (req, res) => {
 //**************************************************** */
 
 const AddContact = async (req, res) => {
-  console.log("Registro entrante.....:", req.body);
   const newContact = {
     id: parseInt(req.body.id),
     nombre: req.body.nombre,
@@ -83,7 +94,11 @@ const AddContact = async (req, res) => {
     res.send({ data: newContact, message: "Registro Creado" }).status(201);
     return;
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -92,7 +107,6 @@ const AddContact = async (req, res) => {
 //**************************************************** */
 
 const upDateContact = async (req, res) => {
-  console.log("Registro entrante.....:", req.body);
   const id = parseInt(req.params.id);
   const newContact = {
     id: parseInt(req.body.id),
@@ -113,7 +127,11 @@ const upDateContact = async (req, res) => {
     }
     return;
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 

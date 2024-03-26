@@ -16,12 +16,15 @@ const getAcademys = async (req, res) => {
     }, 10);
     return;
   } catch (error) {
-    console.log("Este es el error....:", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getAcademy = async (req, res) => {
-  console.log("id.....", req.params);
   let id = parseInt(req.params.id);
   try {
     const datos = await fs.readFile(academysFile, "utf-8");
@@ -31,18 +34,20 @@ const getAcademy = async (req, res) => {
       .status(200)
       .json([{ data: academy, message: "Consulta Exitosa", exito: true }]);
   } catch (error) {
-    console.log("Error en consilta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const getAcademyCodigo = async (req, res) => {
-  console.log("codigo.....", req.params);
   let codigo = parseInt(req.params.codigo);
   try {
     const datos = await fs.readFile(academysFile, "utf-8");
     const academys = JSON.parse(datos);
     const academy = academys.find((academy) => academy.codigo == codigo);
-    console.log(academy);
     let messageResult = "";
     let status = false;
     if (academy === undefined) {
@@ -56,13 +61,16 @@ const getAcademyCodigo = async (req, res) => {
       .status(200)
       .json({ data: academy, message: messageResult, exito: status });
   } catch (error) {
-    console.log("Error en consulta...", error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const AddAcademy = async (req, res) => {
-  console.log("Entre a addAcademy");
-  console.log(req.body);
+
   let nuevoacademy = {
     id: parseInt(req.body.id),
     codigo: req.body.codigo,
@@ -74,13 +82,11 @@ const AddAcademy = async (req, res) => {
   };
 
   try {
-    console.log("en el tray");
     const datos = await fs.readFile(academysFile, "utf-8");
     const academys = JSON.parse(datos);
     const academy = academys.find(
       (academy) => academy.codigo == req.body.codigo
     );
-    console.log("en el tray....", academy);
     if (academy) {
       return res.status(400).send({
         data: "",
@@ -88,7 +94,6 @@ const AddAcademy = async (req, res) => {
         exito: false,
       });
     }
-    console.log("pase");
     let id = getNextId(academys);
     nuevoacademy.id = id;
     academys.push(nuevoacademy);
@@ -101,7 +106,11 @@ const AddAcademy = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
@@ -120,14 +129,16 @@ const deleteAcademy = async (req, res) => {
       exito: true,
     });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 
 const updateAcademy = async (req, res) => {
   let id = parseInt(req.params.id);
-  console.log("Entre a updateAcademy");
-  console.log(req.body);
   let nuevoDato = {
     id: parseInt(req.body.id),
     codigo: req.body.codigo,
@@ -137,23 +148,23 @@ const updateAcademy = async (req, res) => {
     telefono: req.body.telefono,
     url: req.body.url,
   };
-  console.log("nuevoDato.....:", nuevoDato);
   try {
     const datos = await fs.readFile(academysFile, "utf-8");
     const academys = JSON.parse(datos);
-    console.log("Id....:", id);
     const index = academys.findIndex((item) => parseInt(item.id) == id);
-    console.log("index...", index);
     if (index >= 0) {
       academys[index] = nuevoDato;
       await fs.writeFile(academysFile, JSON.stringify(academys));
     }
-    console.log("academys.....", nuevoDato);
     return res
       .status(200)
       .json({ data: nuevoDato, message: "Registro Actualizado", exito: true });
   } catch (error) {
-    console.log(error);
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
   }
 };
 

@@ -25,7 +25,6 @@ router.delete("/ticket/:id", deleteTicket);
 router.post("/envioticket",  enviaTicket);
 
 function validarData(req, res, next) {
-  console.log("Body....", req.body);
   // const { codigo, nombre, descripcion } = req.body;
 
   // if (!codigo) {
