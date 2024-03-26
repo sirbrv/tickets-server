@@ -22,7 +22,6 @@ app.use("/api", require("./routes/StudentRoutes.js"));
 app.use("/api", require("./routes/EventsRoutes.js"));
 app.use("/api", require("./routes/AcademyRoutes.js"));
 app.use("/api", require("./routes/TicketsRoutes.js"));
- 
 
 app.use((red, res, next) => {
   res.status(404).sendFile(__dirname + "/public/html/404.html");

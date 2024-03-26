@@ -94,7 +94,7 @@ const AddTicket = async (req, res) => {
     metodoPago: req.body.metodoPago,
     costo: req.body.costo,
     responsable: req.body.responsable,
-    nomtoPago: req.body.nomtoPago,
+    montoPago: req.body.montoPago,
     formaPago: req.body.formaPago,
     fechaVenta: Date.now(),
   };
@@ -128,8 +128,8 @@ const AddTicket = async (req, res) => {
     let ticketID = null;
     if (fsTicket) {
       ticketID = fsTicket.id;
-      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.nomtoPago);
-      fsTicket.montoPagado = req.body.nomtoPago;
+      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.montoPago);
+      fsTicket.montoPagado = req.body.montoPago;
       fsTicket.estatus = "Vendida";
       if (saldo) {
         fsTicket.estatusPago = "pendiente";
@@ -212,8 +212,8 @@ const updateTicket = async (req, res) => {
     let ticketID = null;
     if (fsTicket) {
       ticketID = fsTicket.id;
-      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.nomtoPago);
-      fsTicket.montoPagado = req.body.nomtoPago;
+      let saldo = parseFloat(req.body.costo) - parseFloat(req.body.montoPago);
+      fsTicket.montoPagado = req.body.montoPago;
       if (saldo) {
         fsTicket.estatusPago = "pendiente";
       } else {
@@ -306,14 +306,18 @@ const enviaTicket = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 const getVefify = async (req, res) => {
+  console.log("entoy aqui...:", req.params.codigo);
   const datos = await fs.readFile(ticketsFile, "utf-8");
   const tickets = JSON.parse(datos);
 
   const ticket = tickets.find(
     (ticket) => ticket.codigoEntrada == req.params.codigo
   );
-
-  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.nomtoPago);
+  console.log(tickets);
+  console.log("costo....:", parseFloat(ticket.costo));
+  console.log("montoPago....:", parseFloat(ticket.montoPagado));
+  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
+  console.log("montoPago....:", parseFloat(saldo));
 
   let html = `<div style="padding: 20px 20px; font-size: 10px">
           <h1 style="text-align: center;"> Verificación de Entradas</><bR>
@@ -322,15 +326,16 @@ const getVefify = async (req, res) => {
           </div>
           `;
 
-  if ((ticket.estatusPago = "pendiente")) {
+  if (saldo > 0 || ticket.estatusPago != "pagada") {
     html = `<div style="padding: 20px 50px; font-size: 10px">
                 <h1 style="text-align: center; ">Verificación de Entradas</><bR>
                 
                 <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
                 <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
                 <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
+                // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
             
-                <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+                <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
             </div>
 
             `;
