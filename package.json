@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=Desarrollo nodemon ./src/index.js",
-    "start": "cross-env NODE_ENV=production node ./src/index.js"
+    "dev": "cross-env NODE_ENV=Desarrollo nodemon ./src/server.js",
+    "start": "cross-env NODE_ENV=production node ./src/server.js"
   },
   "author": "Curso FullStack",
   "license": "ISC",
