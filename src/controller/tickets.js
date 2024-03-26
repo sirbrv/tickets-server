@@ -264,7 +264,7 @@ const generaTicket = async (req, res) => {
       codEntrada = `${correlativo}-${i}`;
     }
     let newticket = {
-      id: lastId + 1, 
+      id: lastId + 1,
       codigoEntrada: codEntrada, // Generar el código de entrada
       academia: academia,
       urlAcademia: datoAcademia.url,
@@ -293,7 +293,7 @@ const generaTicket = async (req, res) => {
 /* *******************************************************/
 const enviaTicket = async (req, res) => {
   enviarMail({
-    url: req.body.urlAcademy,
+    url: req.body.urlAcademia,
     numTicket: req.body.codigoEntrada,
     email: req.body.emailComprador,
     compreador: req.body.nombreComprador,
