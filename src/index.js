@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", require("./routes/VerifyRoutes.js"));
-app.use("/api", require("./routes/Contact"));
+app.use("/api", require("./routes/Contact.js"));
 app.use("/api", require("./routes/StudentRoutes.js"));
 app.use("/api", require("./routes/EventsRoutes.js"));
 app.use("/api", require("./routes/AcademyRoutes.js"));
@@ -29,5 +29,5 @@ app.use((red, res, next) => {
 
 app.listen(port, () => {
   // console.log(`Servidor disponible en  ${host}:${port}`);
-  console.log(`Servidor disponible en el puerto :${port}`);
+  console.log(`Servidor disponible en http://localhost:${port}`);
 });
