@@ -8,7 +8,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-scc/envirome
+src/envirome
+src/json
 dist
 dist-ssr
 *.local
