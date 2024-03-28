@@ -306,6 +306,8 @@ const enviaTicket = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 const getVefify = async (req, res) => {
+  console.log("Verifica.....:");
+  console.log(req.params);
   const datos = await fs.readFile(ticketsFile, "utf-8");
   const tickets = JSON.parse(datos);
 
@@ -315,23 +317,25 @@ const getVefify = async (req, res) => {
   let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
 
   let html = `<div style="padding: 20px 20px; font-size: 10px">
-          <h1 style="text-align: center;"> Verificación de Entradas</><bR>
-          <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-          <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
-          </div>
-          `;
+              <h1 style="text-align: center;"> Verificación de Entradas</><bR>
+              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+              <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
+              <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+              </div>
+              `;
+  // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
 
   if (saldo > 0 || ticket.estatusPago != "pagada") {
     html = `<div style="padding: 20px 50px; font-size: 10px">
                 <h1 style="text-align: center; ">Verificación de Entradas</><bR>
-                
                 <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
                 <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
                 <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
-                <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-           </div>
-
-            `;
+              <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+              </div>
+              
+              `;
+    // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
   }
   return res.status(200).send(html);
 };

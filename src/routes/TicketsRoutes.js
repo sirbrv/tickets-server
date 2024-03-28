@@ -11,6 +11,13 @@ const {
   enviaTicket,
 } = require("../controller/tickets");
 
+const {
+  getTicketsVendidos,
+  getTicketsVendido,
+  deleteTicketsVendido,
+  updateTicketsVendido,
+} = require("../controller/ticketsVendidos");
+
 /* *******************************************************  */
 /*             Ruta de acceso a archivos Tickets           */
 /* *******************************************************  */
@@ -22,7 +29,16 @@ router.post("/ticket", validarData, AddTicket);
 router.post("/ticketGen", validarData, generaTicket);
 router.put("/ticket/:id", validarData, updateTicket);
 router.delete("/ticket/:id", deleteTicket);
-router.post("/envioticket",  enviaTicket);
+router.post("/envioticket", enviaTicket);
+
+/* *******************************************************  */
+/*      Ruta de acceso a archivos Tickets Vendidos           */
+/* *******************************************************  */
+
+router.get("/ticketVentas", getTicketsVendidos);
+router.get("/ticketVenta/:id", getTicketsVendido);
+router.put("/ticketVenta/:id", updateTicketsVendido);
+router.delete("/ticketVenta/:id", deleteTicketsVendido);
 
 function validarData(req, res, next) {
   // const { codigo, nombre, descripcion } = req.body;

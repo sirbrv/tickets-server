@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
   res.status(200).sendFile(__dirname + "/public/html/welcome.html");
 });
 
+
 app.use("/api", require("./routes/VerifyRoutes.js"));
 app.use("/api", require("./routes/contact.js"));
 app.use("/api", require("./routes/StudentRoutes.js"));

@@ -1,16 +1,1 @@
-[
-  {
-    "id": 107,
-    "codigoEntrada": "5-2004",
-    "academia": "",
-    "evento": "Este es mi tercer convenio con pepsi",
-    "emailComprador": "sirbrv@gmail.com",
-    "nombreComprador": "Victor Brown",
-    "metodoPago": "Efectivo",
-    "costo": "12000",
-    "responsable": "",
-    "montoPago": "13000",
-    "formaPago": "Total",
-    "fechaVenta": 1711197492933
-  }
-]
+[{"id":108,"codigoEntrada":"G-1001","academia":"","evento":"Comnciero de Shakira","emailComprador":"sirbrv@gmail.com","nombreComprador":"Victor Brown","metodoPago":"Efectivo","costo":"13000","responsable":"Victor Luis","montoPago":"13000","formaPago":"Total","fechaVenta":1711579242953},{"id":109,"codigoEntrada":"G-1002","academia":"","evento":"Comnciero de Shakira","emailComprador":"sirbrv@gmail.com","nombreComprador":"Victor Brown","metodoPago":"Efectivo","costo":"13000","responsable":"Victor Luis","montoPago":"13000","formaPago":"Total","fechaVenta":1711581566962},{"id":110,"codigoEntrada":"G-1004","academia":"","evento":"Comnciero de Shakira","emailComprador":"sirbrv@gmail.com","nombreComprador":"Victor Brown","metodoPago":"Efectivo","costo":"20000","responsable":"Victor Luis","montoPago":"13000","formaPago":"Parcial","fechaVenta":1711582982177},{"id":111,"codigoEntrada":"2-1004","academia":"","evento":"Obre de teatro \"El Cascanueces\"","emailComprador":"sirbrv@gmail.com","nombreComprador":"Victor Brown","metodoPago":"Efectivo","costo":"20000","responsable":"Jose Maria Suarez","montoPago":"20000","formaPago":"Total","fechaVenta":1711583860837}]

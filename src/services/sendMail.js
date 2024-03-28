@@ -6,7 +6,7 @@ const enviarMail = async (options) => {
   https: try {
     // Generar el código QR de forma asíncrona
     const imgData = await QRCode.toDataURL(
-      `https://${options.url}/api/verify/${options.numTicket}`
+      `http://${options.url}/api/verify/${options.numTicket}`
     );
     fs.writeFileSync("qr.pgn", `${imgData}`);
 
