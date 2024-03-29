@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const studentsFile = "src/json/students.json";
 const ticketsFile = "src/json/tickets.json";
+const tstudentHistoryFile = "src/json/studentHistory.json";
 
 //* *************************************************************** *//
 //       definición de rutas  de acceso a archivo students           //
@@ -74,52 +75,52 @@ const AddStudent = async (req, res) => {
   let numOb = 0;
   let numEx = 0;
   if (req.body.ticketOb1) {
-    await grabaTicket(req.body.ticketOb1, req.body.nombre);
+    await grabaTicket(req.body.ticketOb1, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb2) {
-    await grabaTicket(req.body.ticketOb2, req.body.nombre);
+    await grabaTicket(req.body.ticketOb2, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb3) {
-    await grabaTicket(req.body.ticketOb3, req.body.nombre);
+    await grabaTicket(req.body.ticketOb3, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb4) {
-    await grabaTicket(req.body.ticketOb4, req.body.nombre);
+    await grabaTicket(req.body.ticketOb4, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb5) {
-    await grabaTicket(req.body.ticketOb5, req.body.nombre);
+    await grabaTicket(req.body.ticketOb5, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb6) {
-    await grabaTicket(req.body.ticketOb6, req.body.nombre);
+    await grabaTicket(req.body.ticketOb6, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
 
   if (req.body.ticketEx1) {
-    await grabaTicket(req.body.ticketEx1, req.body.nombre);
+    await grabaTicket(req.body.ticketEx1, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx2) {
-    await grabaTicket(req.body.ticketEx2, req.body.nombre);
+    await grabaTicket(req.body.ticketEx2, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx3) {
-    await grabaTicket(req.body.ticketEx3, req.body.nombre);
+    await grabaTicket(req.body.ticketEx3, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx4) {
-    await grabaTicket(req.body.ticketEx4, req.body.nombre);
+    await grabaTicket(req.body.ticketEx4, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx5) {
-    await grabaTicket(req.body.ticketEx5, req.body.nombre);
+    await grabaTicket(req.body.ticketEx5, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx6) {
-    await grabaTicket(req.body.ticketEx6, req.body.nombre);
+    await grabaTicket(req.body.ticketEx6, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   let nuevostudent = {
@@ -203,52 +204,52 @@ const updateStudent = async (req, res) => {
   let numOb = 0;
   let numEx = 0;
   if (req.body.ticketOb1) {
-    await grabaTicket(req.body.ticketOb1, req.body.nombre);
+    await grabaTicket(req.body.ticketOb1, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb2) {
-    await grabaTicket(req.body.ticketOb2, req.body.nombre);
+    await grabaTicket(req.body.ticketOb2, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb3) {
-    await grabaTicket(req.body.ticketOb3, req.body.nombre);
+    await grabaTicket(req.body.ticketOb3, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb4) {
-    await grabaTicket(req.body.ticketOb4, req.body.nombre);
+    await grabaTicket(req.body.ticketOb4, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb5) {
-    await grabaTicket(req.body.ticketOb5, req.body.nombre);
+    await grabaTicket(req.body.ticketOb5, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
   if (req.body.ticketOb6) {
-    await grabaTicket(req.body.ticketOb6, req.body.nombre);
+    await grabaTicket(req.body.ticketOb6, req.body.nombre, req.body.dni, "obl");
     numOb = numOb + 1;
   }
 
   if (req.body.ticketEx1) {
-    await grabaTicket(req.body.ticketEx1, req.body.nombre);
+    await grabaTicket(req.body.ticketEx1, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx2) {
-    await grabaTicket(req.body.ticketEx2, req.body.nombre);
+    await grabaTicket(req.body.ticketEx2, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx3) {
-    await grabaTicket(req.body.ticketEx3, req.body.nombre);
+    await grabaTicket(req.body.ticketEx3, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx4) {
-    await grabaTicket(req.body.ticketEx4, req.body.nombre);
+    await grabaTicket(req.body.ticketEx4, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx5) {
-    await grabaTicket(req.body.ticketEx5, req.body.nombre);
+    await grabaTicket(req.body.ticketEx5, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   if (req.body.ticketEx6) {
-    await grabaTicket(req.body.ticketEx6, req.body.nombre);
+    await grabaTicket(req.body.ticketEx6, req.body.nombre, req.body.dni, "ext");
     numEx = numEx + 1;
   }
   let nuevoDato = {
@@ -294,7 +295,7 @@ const updateStudent = async (req, res) => {
   }
 };
 
-const grabaTicket = async (ticketNum, nombre) => {
+const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
   // *************************************************//
   // Se actualiza catalogo de Tickets
   // *************************************************//
@@ -306,7 +307,7 @@ const grabaTicket = async (ticketNum, nombre) => {
   let ticketID = null;
   if (fsTicket) {
     ticketID = fsTicket.id;
-    fsTicket.estatus = "Asignada";
+    fsTicket.estatus = !fsTicket.estatus ? "Asignada" : fsTicket.estatus;
     fsTicket.responsable = nombre;
   }
   const index2 = fstickets.findIndex((item) => item.id === ticketID);
@@ -315,9 +316,67 @@ const grabaTicket = async (ticketNum, nombre) => {
     fstickets[index2] = fsTicket;
     await fs.writeFile(ticketsFile, JSON.stringify(fstickets));
   }
+  // *************************************************//
+  // Se actualiza catalogo historico de student
+  // *************************************************//
+  const fsHisDatos = await fs.readFile(tstudentHistoryFile, "utf-8");
+  const fsHistickets = JSON.parse(fsHisDatos);
+  let idHist = getNextId(fsHistickets);
+  let register = {
+    id: idHist,
+    dni: dni,
+    tipoTicket: tipo,
+    codigoEntrada: fsTicket.codigoEntrada,
+    evento: fsTicket.evento,
+    statusProceso: fsTicket.estatus,
+    costo: fsTicket.costo,
+    montoPagado: fsTicket.montoPagado,
+  };
+
+  const fsHisTicket = fsHistickets.find(
+    (ticket) => ticket.codigoEntrada == ticketNum
+  );
+
+  if (fsHisTicket) {
+    const index = fsHistickets.findIndex(
+      (item) => item.codigoEntrada === ticketNum
+    );
+
+    register = {
+      id: fsHisTicket.id,
+      dni: fsHisTicket.dni,
+      tipoTicket: fsHisTicket.tipoTicket,
+      codigoEntrada: fsHisTicket.codigoEntrada,
+      evento: fsHisTicket.evento,
+      statusProceso: fsTicket.estatus,
+      costo: fsHisTicket.costo,
+      montoPagado: fsTicket.montoPagado,
+    };
+    fsHistickets[index] = register;
+  } else {
+    fsHistickets.push(register);
+  }
+
+  await fs.writeFile(tstudentHistoryFile, JSON.stringify(fsHistickets));
+
   // **********************fin ***************************//
 };
 
+const getStudentHistoy = async (req, res) => {
+  const fsHisDatos = await fs.readFile(tstudentHistoryFile, "utf-8");
+  const fsHistickets = JSON.parse(fsHisDatos);
+
+  const fsHisTicket = fsHistickets.filter(
+    (ticket) => ticket.dni === req.params.dni
+  );
+  setTimeout(() => {
+    res
+      .send({
+        data: fsHisTicket,
+      })
+      .status(200);
+  }, 10);
+};
 //* *************************************************************** *//
 //       se genera ID en funcion a los regisatro del archivo         //
 //* *************************************************************** *//
@@ -337,4 +396,5 @@ module.exports = {
   AddStudent,
   deleteStudent,
   updateStudent,
+  getStudentHistoy,
 };
