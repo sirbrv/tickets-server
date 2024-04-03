@@ -6,8 +6,7 @@ const {
   delContact,
   AddContact,
   upDateContact,
-} = require("../controller/contactsController");
- 
+} = require("../../controller/json/contactsController");
 
 router.get("/contacts", getContacts);
 router.get("/contact/:id", getContact);

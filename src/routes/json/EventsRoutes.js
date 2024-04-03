@@ -7,7 +7,7 @@ const {
   AddEvent,
   deleteEvent,
   updateEvent,
-} = require("../controller/events");
+} = require("../../controller/json/events");
 
 /* *******************************************************  */
 /*             Ruta de acceso a archivos Events           */

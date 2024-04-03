@@ -1,1 +1,11 @@
-[{"id":5,"codigo":"11100","nombre":"Alimentos Pepsi Colas S. A.","email":"sirbrv@gmail.com","adress":"Enriqueta Compte y Rique","telefono":"093903094","url":"localhost:5000"}]
+[
+  {
+    "id": 5,
+    "codigo": "11100",
+    "nombre": "Alimentos Pepsi Colas S. A.",
+    "email": "sirbrv@gmail.com",
+    "adress": "Enriqueta Compte y Rique",
+    "telefono": "093903094",
+    "url": "localhost:5000"
+  }
+]

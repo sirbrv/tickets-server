@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getVefify } = require("../controller/tickets.js");
+const { getVefify } = require("../../controller/json/tickets.js");
 
 /* *******************************************************  */
 /*             Ruta de acceso para verificar entradas       */

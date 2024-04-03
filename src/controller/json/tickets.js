@@ -3,7 +3,7 @@ const ticketsFile = "src/json/tickets.json";
 const ventaTicketsFile = "src/json/ventaTickets.json";
 const academysFile = "src/json/academys.json";
 
-const enviarMail = require("../services/sendMail");
+const enviarMail = require("../../services/sendMail");
 
 //* *************************************************************** *//
 //       definición de rutas  de acceso a archivo tickets           //
@@ -306,8 +306,8 @@ const enviaTicket = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 const getVefify = async (req, res) => {
-  console.log("Verifica.....:");
-  console.log(req.params);
+  // console.log("Verifica.....:");
+  // console.log(req.params);
   const datos = await fs.readFile(ticketsFile, "utf-8");
   const tickets = JSON.parse(datos);
 

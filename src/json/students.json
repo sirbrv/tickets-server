@@ -1,1 +1,38 @@
-[{"id":68,"dni":"639788693","nombre":"Victor Luis","email":"luis@gmail.com","adress":"Enriqueta Compt y Rique 3","EntObligatorias":4,"EntExtras":3,"academia":"Jose Maria Suarez","ticketOb1":"G-1001","ticketOb2":"G-1002","ticketOb3":"G-1004","ticketOb4":"H-1003","ticketOb5":"","ticketOb6":"","ticketEx1":"G-1003","ticketEx2":"2-1002","ticketEx3":"2-1001"},{"id":69,"dni":"63275131","nombre":"Jose Maria Suarez","email":"sirbrv@gmail.com","celular":"5455455455","adress":"Enriqueta Compt y Rique 3","EntObligatorias":3,"EntExtras":3,"academia":"Hector Sandibal","ticketOb1":"G-1004","ticketOb2":"1-1001","ticketOb3":"1-1001","ticketEx1":"2-1004","ticketEx2":"3-1002","ticketEx3":"2-1000"}]
+[
+  {
+    "id": 68,
+    "dni": "639788693",
+    "nombre": "Victor Luis",
+    "email": "luis@gmail.com",
+    "adress": "Enriqueta Compt y Rique 3",
+    "EntObligatorias": 4,
+    "EntExtras": 3,
+    "academia": "Jose Maria Suarez",
+    "ticketOb1": "G-1001",
+    "ticketOb2": "G-1002",
+    "ticketOb3": "G-1004",
+    "ticketOb4": "H-1003",
+    "ticketOb5": "",
+    "ticketOb6": "",
+    "ticketEx1": "G-1003",
+    "ticketEx2": "2-1002",
+    "ticketEx3": "2-1001"
+  },
+  {
+    "id": 69,
+    "dni": "63275131",
+    "nombre": "Jose Maria Suarez",
+    "email": "sirbrv@gmail.com",
+    "celular": "5455455455",
+    "adress": "Enriqueta Compt y Rique 3",
+    "EntObligatorias": 3,
+    "EntExtras": 3,
+    "academia": "Hector Sandibal",
+    "ticketOb1": "G-1004",
+    "ticketOb2": "1-1001",
+    "ticketOb3": "1-1001",
+    "ticketEx1": "2-1004",
+    "ticketEx2": "3-1002",
+    "ticketEx3": "2-1000"
+  }
+]

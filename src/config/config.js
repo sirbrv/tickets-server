@@ -1,7 +1,7 @@
 const path = require("path");
 if (process.env.NODE_ENV == "Desarrollo") {
   require("dotenv").config({
-    path: path.join(__dirname, "./envirome/devEnvirome.env"),
+    path: path.join(__dirname, "../envirome/devEnvirome.env"),
   });
 }
 const port = process.env.PORT;

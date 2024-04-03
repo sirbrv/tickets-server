@@ -7,7 +7,7 @@ const {
   AddAcademy,
   deleteAcademy,
   updateAcademy,
-} = require("../controller/academy");
+} = require("../../controller/json/academy");
 
 /* *******************************************************  */
 /*             Ruta de acceso a archivos academys           */

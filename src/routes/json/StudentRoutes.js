@@ -8,7 +8,7 @@ const {
   deleteStudent,
   updateStudent,
   getStudentHistoy,
-} = require("../controller/students");
+} = require("../../controller/json/students");
 
 /* *******************************************************  */
 /*             Ruta de acceso a archivos Students           */
@@ -21,8 +21,6 @@ router.post("/student", validarData, AddStudent);
 router.put("/student/:id", validarData, updateStudent);
 router.delete("/student/:id", deleteStudent);
 router.get("/studentHistoy/:dni", getStudentHistoy);
-
-
 
 function validarData(req, res, next) {
   const { dni, nombre, descripcion } = req.body;

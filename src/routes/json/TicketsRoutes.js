@@ -9,14 +9,14 @@ const {
   updateTicket,
   generaTicket,
   enviaTicket,
-} = require("../controller/tickets");
+} = require("../../controller/json/tickets");
 
 const {
   getTicketsVendidos,
   getTicketsVendido,
   deleteTicketsVendido,
   updateTicketsVendido,
-} = require("../controller/ticketsVendidos");
+} = require("../../controller/json/ticketsVendidos");
 
 /* *******************************************************  */
 /*             Ruta de acceso a archivos Tickets           */
