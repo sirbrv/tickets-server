@@ -32,6 +32,7 @@ app.use("/api/v2", require("./routes/mysql/UsersRoutes.js"));
 app.use("/api/v2", require("./routes/mysql/generalRouter.js"));
 app.use("/api/v2", require("./routes/mysql/adminRouter.js"));
 app.use("/api/v2", require("./routes/mysql/ticketsRouter.js"));
+app.use("/api/v2", require("./routes/mysql/VerifyRoutes.js"));
 
 // app.use("*", (req, res) => {
 //   console.log("Request Type:", req.method);

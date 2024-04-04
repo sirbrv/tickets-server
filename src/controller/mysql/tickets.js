@@ -45,7 +45,7 @@ exports.createTicket = async (req, res) => {
   try {
     await Tickets.create(newUser);
     res.json({
-      status: "200",
+      status: "201",
       message: `El registro fue Creado`,
       data: newUser,
     });
@@ -196,7 +196,6 @@ exports.enviaTicket = async (req, res, next) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 exports.getVefify = async (req, res) => {
-;
   const ticket = await Tickets.findOne({
     where: {
       codigoEntrada: req.body.codigo,
@@ -314,7 +313,6 @@ exports.AddTicket = async (req, res) => {
 /*********************** Fin de Seccion   ***************** */
 
 exports.getTicketsVendidos = async (req, res) => {
-
   VentaTickets.findAll()
     .then((data) => {
       res.json({
@@ -357,7 +355,6 @@ exports.updateTicketsVendido = async (req, res) => {
     });
   }
   try {
-
     await VentaTickets.findOne({ where: { id: req.params.id } }).then(
       (item) => {
         if (item) {
@@ -377,7 +374,6 @@ exports.updateTicketsVendido = async (req, res) => {
     // *************************************************//
     // Se actualiza catalogo de Tickets
     // *************************************************//
-
     const fsTicket = await Tickets.findOne({
       where: { codigoEntrada: req.body.codigoEntrada },
     });
@@ -428,4 +424,48 @@ exports.updateTicketsVendido = async (req, res) => {
       exito: false,
     });
   }
+};
+
+//* *************************************************************** *//
+//                 Verifica datos escaneados en el QR               //
+//* *************************************************************** *//
+exports.getVefify = async (req, res) => {
+  // console.log("Verifica.....:");
+  // console.log(req.params);
+  const ticket = await Tickets.findOne({
+    where: { codigoEntrada: req.params.codigo },
+  });
+
+  if (!ticket) {
+    return res.status(400).send({
+      data: "",
+      message: "El número de Entrada Indicado, No Existe..",
+      exito: false,
+    });
+  }
+
+  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
+
+  let html = `<div style="padding: 20px 20px; font-size: 10px">
+              <h1 style="text-align: center;"> Verificación de Entradas</><bR>
+              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+              <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
+              <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+              </div>
+              `;
+  // <a href="https://tickets-server.onrender.com/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+
+  if (saldo > 0 || ticket.estatusPago != "pagada") {
+    html = `<div style="padding: 20px 50px; font-size: 10px">
+                <h1 style="text-align: center; ">Verificación de Entradas</><bR>
+                <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+                <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
+                <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
+              <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+              </div>
+              
+              `;
+    // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+  }
+  return res.status(200).send(html);
 };

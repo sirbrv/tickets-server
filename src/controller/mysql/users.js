@@ -132,7 +132,7 @@ exports.createUser = async (req, res) => {
     // console.log(" mensaje enviado..:");
     // console.log(newUser);
     res.status(200).json({
-      status: "200",
+      status: "201",
       data: newUser,
       // message: `El registro fue Creado, por favor revísa tu email. ${user.email} para activar tu cuenta!`,
       message: `El registro fue Creado`,

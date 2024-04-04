@@ -48,14 +48,14 @@ exports.createAcademy = async (req, res) => {
   };
   try {
     await Academys.create(newUser);
-    res.status(200).json({
-      status: "200",
+    res.status(201).json({
+      status: "201",
       message: `El registro fue Creado`,
       data: newUser,
     });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -116,7 +116,7 @@ exports.deleteAcademy = async (req, res, next) => {
       .json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -163,15 +163,14 @@ exports.createEvent = async (req, res) => {
   try {
     await Events.create(newUser);
     const data = Events.findAll();
-    res.status(200).json({
-      status: "200",
+    res.status(201).json({
+      status: "201",
       message: `El registro fue Creado`,
       data: newUser,
-      // configs: data,
     });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -203,11 +202,9 @@ exports.updateEvent = async (req, res, next) => {
         .update(existeitem)
         .then(function () {
           const data = Events.findAll();
-          //  console.log("datod.....:", data);
           res.status(200).json({
             status: "200",
             data: existeitem,
-            //        Events: data,
             message: "Actualización realizada exitosamente",
           });
         })
@@ -237,7 +234,7 @@ exports.deleteEvent = async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -351,15 +348,14 @@ exports.createStudent = async (req, res) => {
   try {
     await Students.create(newUser);
     const data = Students.findAll();
-    res.status(200).json({
-      status: "200",
+    res.status(201).json({
+      status: "201",
       message: `El registro fue Creado`,
       data: newUser,
-      // configs: data,
     });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -492,7 +488,7 @@ exports.deleteStudent = async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).send({
-      message: err.message || "Eror de Comunicación..",
+      message: error.message || "Eror de Comunicación..",
     });
   }
 };
@@ -562,7 +558,6 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
     });
   }
 
-  // **********************fin ***************************//
 };
 
 exports.getStudentHistoy = async (req, res) => {
@@ -574,3 +569,5 @@ exports.getStudentHistoy = async (req, res) => {
     });
   });
 };
+
+// **********************fin ***************************//

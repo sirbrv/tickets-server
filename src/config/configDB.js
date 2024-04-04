@@ -5,13 +5,14 @@ let DB_DATABASE = dbConfig.database;
 let DB_USER = dbConfig.user;
 let DB_PASSWORD = dbConfig.password;
 let DB_HOST = dbConfig.host;
-
-//console.log(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, dbConfig.port);
+let DB_PORT = dbConfig.portdb;
+// console.log("bd-puerto...", DB_PORT);
+// console.log(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, dbConfig.port);
 
 const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
   dialect: dbConfig.dialect,
-  port: "3306",
+  port: DB_PORT,
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,

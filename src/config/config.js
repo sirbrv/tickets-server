@@ -5,7 +5,8 @@ if (process.env.NODE_ENV == "Desarrollo") {
   });
 }
 const port = process.env.PORT;
-const host = process.env.HOST;
+const portdb = process.env.DB_PORT;
+const host = process.env.DB_HOST;
 const user = process.env.USER;
 const password = process.env.PASSWORD;
 const database = process.env.DATA_BASE;
@@ -17,4 +18,13 @@ const pool = {
   acquire: 30000,
   idle: 10000,
 };
-module.exports = { host, user, password, database, dialect, pool, port };
+module.exports = {
+  host,
+  user,
+  password,
+  database,
+  dialect,
+  pool,
+  port,
+  portdb,
+};

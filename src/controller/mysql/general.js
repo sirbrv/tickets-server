@@ -10,7 +10,7 @@ exports.getContacts = async (req, res) => {
 
   Contacts.findAll()
     .then((data) => {
-      res.json({
+      res.status(200).json({
         status: "200",
         message: "Información Registrada...",
         data: data,
@@ -30,7 +30,7 @@ exports.createContact = async (req, res) => {
   //   },
   // });
   // if (existeitem) {
-  //   return res.json({
+  //   return res.status(200).json({
   //     status: "403",
   //     message: "La Información ya está registrada",
   //   });
@@ -42,13 +42,13 @@ exports.createContact = async (req, res) => {
   };
   try {
     await Contacts.create(newUser);
-    res.json({
-      status: "200",
+    res.status(201).json({
+      status: "201",
       message: `El registro fue Creado`,
       data: newUser,
     });
   } catch (error) {
-    res.json({ status: "409", message: error.message });
+    res.status(400).json({ status: "409", message: error.message });
   }
 };
 
@@ -57,9 +57,9 @@ exports.getContact = async (req, res) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "403", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
   }
-  res.json({ status: "200", data: existeitem });
+  res.status(200).json({ status: "200", data: existeitem });
 };
 
 exports.updateContact = async (req, res, next) => {
@@ -73,14 +73,14 @@ exports.updateContact = async (req, res, next) => {
       const item_data = item
         .update(existeitem)
         .then(function () {
-          res.json({
+          res.status(200).json({
             status: "200",
             data: item_data,
             message: "Actualización realizada exitosamente",
           });
         })
         .catch((err) => {
-          res.json({ status: "500", message: err.message });
+          res.status(500).json({ status: "500", message: err.message });
         });
     }
   });
@@ -91,13 +91,13 @@ exports.deleteContact = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "403", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
   }
   try {
     await Contacts.destroy({ where: { id: req.params.id } });
-    return res.json({ status: "200", message: "Registro Eliminado." });
+    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
-    res.json({ status: "400", message: error });
+    res.status(400).json({ status: "400", message: error });
   }
 };
 
@@ -107,7 +107,7 @@ exports.getConfigTotal = async (req, res) => {
 
   Config.findAll()
     .then((data) => {
-      res.json({
+      res.status(200).json({
         status: "200",
         message: "Información Registrada...",
         configs: data,
@@ -127,7 +127,7 @@ exports.createConfig = async (req, res) => {
     },
   });
   if (existeitem) {
-    return res.json({
+    return res.status(400).json({
       status: "403",
       message: "La Información ya está registrada",
     });
@@ -140,14 +140,14 @@ exports.createConfig = async (req, res) => {
   try {
     await Config.create(newUser);
     const data = Config.findAll();
-    res.json({
-      status: "200",
+    res.status(201).json({
+      status: "201",
       message: `El registro fue Creado`,
       config: newUser,
       configs: data,
     });
   } catch (error) {
-    res.json({ status: "409", message: error.message });
+    res.status(200).json({ status: "409", message: error.message });
   }
 };
 
@@ -157,9 +157,9 @@ exports.getConfig = async (req, res) => {
   });
 
   if (!existeitem) {
-    return res.json({ status: "400", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "400", message: "El ID no está registrado" });
   }
-  res.json({ status: "200", config: existeitem });
+  res.status(200).json({ status: "200", config: existeitem });
 };
 
 exports.getConfigure = async (req, res) => {
@@ -171,7 +171,7 @@ exports.getConfigure = async (req, res) => {
         sequence: item.sequence + 1,
       };
       item.update(existeitem).then(function () {
-        res.json({
+        res.status(200).json({
           status: "200",
           config: item,
         });
@@ -192,16 +192,14 @@ exports.updateConfig = async (req, res, next) => {
         .update(existeitem)
         .then(function () {
           const data = Config.findAll();
-          //  console.log("datod.....:", data);
-          res.json({
+          res.status(200).json({
             status: "200",
             config: existeitem,
-            //        configs: data,
             message: "Actualización realizada exitosamente",
           });
         })
         .catch((err) => {
-          res.json({ status: "500", message: err.message });
+          res.status(500).json({ status: "500", message: err.message });
         });
     }
   });
@@ -212,15 +210,15 @@ exports.deleteConfig = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "433", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "433", message: "El ID no está registrado" });
   }
   try {
     await Config.destroy({ where: { id: req.params.id } });
-    return res.json({
+    return res.status(200).json({
       status: "200",
       message: "Registro Eliminado.",
     });
   } catch (error) {
-    res.json({ status: "400", message: error });
+    res.status(400).json({ status: "400", message: error });
   }
 };

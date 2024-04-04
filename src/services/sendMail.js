@@ -6,9 +6,9 @@ const enviarMail = async (options) => {
   https: try {
     // Generar el código QR de forma asíncrona
     const imgData = await QRCode.toDataURL(
-      `http://${options.url}/api/verify/${options.numTicket}`
+      `${options.url}/api/v2/verify/${options.numTicket}`
     );
-    fs.writeFileSync("qr.pgn", `${imgData}`);
+    // fs.writeFileSync("qr.pgn", `${imgData}`);
 
     const imgSrc = "data:image/png;base64," + imgData.split(",")[1];
     let transporter = nodemailer.createTransport({
