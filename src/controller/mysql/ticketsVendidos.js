@@ -16,7 +16,7 @@ exports.getTicketsVendidos = async (req, res) => {
 
   VentaTickets.findAll()
     .then((data) => {
-      res.json({
+      res.status(200).json({
         status: "200",
         message: "Información Registrada...",
         data: data,

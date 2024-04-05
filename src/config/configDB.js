@@ -6,8 +6,8 @@ let DB_USER = dbConfig.user;
 let DB_PASSWORD = dbConfig.password;
 let DB_HOST = dbConfig.host;
 let DB_PORT = dbConfig.portdb;
-// console.log("bd-puerto...", DB_PORT);
-// console.log(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, dbConfig.port);
+console.log("bd-puerto...", DB_PORT);
+console.log(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, dbConfig.port);
 
 const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
@@ -46,6 +46,8 @@ db.studentHistory = require("../models/mysql/studentHistory.js")(
 );
 db.tickets = require("../models/mysql/tickets.js")(sequelize, DataTypes);
 db.ventaTickets = require("../models/mysql/ventaTickets")(sequelize, DataTypes);
+db.gestionVentas = require("../models/mysql/gestionVentas.js")(sequelize, DataTypes);
+
 db.sequelize.sync({ force: false }).then(() => {
   console.log("Inicialización del proyecto terminado correctamente!");
 });

@@ -28,4 +28,5 @@ router.post("/student/", adminController.createStudent);
 router.put("/student/:id", adminController.updateStudent);
 router.delete("/student/:id", adminController.deleteStudent);
 router.get("/studentHistoy/:dni", adminController.getStudentHistoy);
+
 module.exports = router;

@@ -12,7 +12,7 @@ const enviarMail = require("../../services/sendMail");
 exports.getTickets = async (req, res) => {
   Tickets.findAll()
     .then((data) => {
-      res.json({
+      res.status(200).json({
         status: "200",
         message: "Información Registrada...",
         data: data,
@@ -32,7 +32,7 @@ exports.createTicket = async (req, res) => {
   //   },
   // });
   // if (existeitem) {
-  //   return res.json({
+  //   return res.status(400).json({
   //     status: "403",
   //     message: "La Información ya está registrada",
   //   });
@@ -44,13 +44,13 @@ exports.createTicket = async (req, res) => {
   };
   try {
     await Tickets.create(newUser);
-    res.json({
+    res.status(201).json({
       status: "201",
       message: `El registro fue Creado`,
       data: newUser,
     });
   } catch (error) {
-    res.json({ status: "409", message: error.message });
+    res.status(400).json({ status: "409", message: error.message });
   }
 };
 
@@ -59,9 +59,9 @@ exports.getTicket = async (req, res) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "403", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
   }
-  res.json({ status: "200", data: existeitem });
+  res.status(200).json({ status: "200", data: existeitem });
 };
 
 exports.updateTicket = async (req, res, next) => {
@@ -78,14 +78,14 @@ exports.updateTicket = async (req, res, next) => {
       const item_data = item
         .update(existeitem)
         .then(function () {
-          res.json({
+          res.status(200).json({
             status: "200",
             data: item_data,
             message: "Actualización realizada exitosamente",
           });
         })
         .catch((err) => {
-          res.json({ status: "500", message: err.message });
+          res.status(500).json({ status: "500", message: err.message });
         });
     }
   });
@@ -96,13 +96,13 @@ exports.deleteTicket = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "403", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
   }
   try {
     await Tickets.destroy({ where: { id: req.params.id } });
-    return res.json({ status: "200", message: "Registro Eliminado." });
+    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
-    res.json({ status: "400", message: error });
+    res.status(400).json({ status: "400", message: error });
   }
 };
 
@@ -296,7 +296,7 @@ exports.AddTicket = async (req, res) => {
       }
     });
     // **********************fin ***************************//
-    return res.status(201).send({
+    return res.status(200).send({
       data: nuevoticket,
       message: "Venta realizada de forma éxitosa",
       exito: true,
@@ -315,7 +315,7 @@ exports.AddTicket = async (req, res) => {
 exports.getTicketsVendidos = async (req, res) => {
   VentaTickets.findAll()
     .then((data) => {
-      res.json({
+      res.status(200).json({
         status: "200",
         message: "Información Registrada...",
         data: data,
@@ -333,13 +333,13 @@ exports.deleteTicketsVendido = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.json({ status: "403", message: "El ID no está registrado" });
+    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
   }
   try {
     await VentaTickets.destroy({ where: { id: req.params.id } });
-    return res.json({ status: "200", message: "Registro Eliminado." });
+    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
-    res.json({ status: "400", message: error });
+    res.status(400).json({ status: "400", message: error });
   }
 };
 
@@ -430,8 +430,6 @@ exports.updateTicketsVendido = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 exports.getVefify = async (req, res) => {
-  // console.log("Verifica.....:");
-  // console.log(req.params);
   const ticket = await Tickets.findOne({
     where: { codigoEntrada: req.params.codigo },
   });

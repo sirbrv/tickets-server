@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const db = require("../../config/configDB");
 const Contacts = db.contacts;
 const Config = db.config;
+const GestionVentas = db.gestionVentas;
 const Op = Sequelize.Op;
 
 /*********************** Seccion de gestión de Contacts  ***************** */
@@ -221,4 +222,24 @@ exports.deleteConfig = async (req, res, next) => {
   } catch (error) {
     res.status(400).json({ status: "400", message: error });
   }
+};
+
+
+/*********************** Seccion de gestión de Ventas  ***************** */
+
+exports.getGestionVentas= async (req, res) => {
+
+  GestionVentas.findAll()
+    .then((data) => {
+      res.status(200).json({
+        status: "200",
+        message: "Información Registrada...",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "No hay Información Registrada..",
+      });
+    });
 };

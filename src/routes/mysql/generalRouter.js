@@ -20,4 +20,11 @@ router.post("/contact/", gralController.createContact);
 router.put("/contact/:id", gralController.updateContact);
 router.delete("/contact/:id", gralController.deleteContact);
 
+
+/** *********************************************** */
+/* Rutas de acceso al catálogo de Gestión de Ventas */
+/** *********************************************** */
+router.get("/gestionVentas/", gralController.getGestionVentas);
+
+
 module.exports = router;

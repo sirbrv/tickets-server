@@ -5,12 +5,12 @@ const Events = db.events;
 const Students = db.students;
 const Tickets = db.tickets;
 const StudentHistory = db.studentHistory;
+const GestionVentas = db.gestionVentas;
 const Op = Sequelize.Op;
 
 /*********************** Seccion de gestión de Academias  ***************** */
 
 exports.getAcademys = async (req, res) => {
-
   Academys.findAll()
     .then((data) => {
       res.status(200).json({
@@ -124,7 +124,6 @@ exports.deleteAcademy = async (req, res, next) => {
 /*********************** Seccion de manejo de Eventos  ***************** */
 
 exports.getEvents = async (req, res) => {
-
   Events.findAll()
     .then((data) => {
       res.status(200).json({
@@ -242,7 +241,6 @@ exports.deleteEvent = async (req, res, next) => {
 /*********************** Seccion de manejo de Estudiantes  ***************** */
 
 exports.getStudents = async (req, res) => {
-
   Students.findAll()
     .then((data) => {
       res.status(200).json({
@@ -347,7 +345,9 @@ exports.createStudent = async (req, res) => {
 
   try {
     await Students.create(newUser);
+    resumenGestion(req.body.dni, req.body.nombre, numOb, numEx);
     const data = Students.findAll();
+
     res.status(201).json({
       status: "201",
       message: `El registro fue Creado`,
@@ -453,6 +453,7 @@ exports.updateStudent = async (req, res, next) => {
       const item_data = item
         .update(existeitem)
         .then(function () {
+          resumenGestion(req.body.dni, req.body.nombre, numOb, numEx);
           const data = Students.findAll();
           //  console.log("datod.....:", data);
           res.status(200).json({
@@ -524,7 +525,8 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
   const fsHisTicket = await StudentHistory.findOne({
     where: { dni: dni },
   });
-
+  console.log("entrada.....:", fsTicket);
+  console.log("fsHisTicket.....:", fsHisTicket);
   if (!fsHisTicket) {
     let newRegister = {
       dni: dni,
@@ -557,7 +559,6 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
       }
     });
   }
-
 };
 
 exports.getStudentHistoy = async (req, res) => {
@@ -571,3 +572,42 @@ exports.getStudentHistoy = async (req, res) => {
 };
 
 // **********************fin ***************************//
+
+const resumenGestion = async (dni, nombre, numOb, numEx) => {
+  let datos = {
+    dni: dni,
+    nombre: nombre,
+    ticketAsignado: numOb + numEx,
+    ticketPagado: 0,
+    montoTotalPagado: 0,
+    montoTotalTicket: 0,
+    montoEfectivo: 0,
+    montoTransf: 0,
+    montoCredito: 0,
+    montoDebito: 0,
+  };
+
+  const existe = await GestionVentas.findOne({
+    where: { dni: dni },
+  });
+
+  if (!existe) {
+    await GestionVentas.create(datos);
+  }
+
+  await GestionVentas.findOne({ where: { dni: dni } }).then((item) => {
+    if (item) {
+      let existeitem = {
+        ticketAsignado: numOb + numEx,
+      };
+      const item_data = item
+        .update(existeitem)
+        .then(function () {})
+        .catch((err) => {
+          res.status(500).send({
+            message: err.message,
+          });
+        });
+    }
+  });
+};
