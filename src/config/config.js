@@ -13,7 +13,7 @@ const database = process.env.DATA_BASE;
 // Parametros de conexion de db
 const dialect = "mysql";
 const pool = {
-  max: 10,
+  max: 30,
   min: 0,
   acquire: 30000,
   idle: 10000,
