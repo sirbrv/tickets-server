@@ -424,7 +424,7 @@ exports.avatar = async (req, res) => {
 
 exports.logoutUser = async (req, res) => {
   try {
-    res.clearCookie("gral_token");
+    // res.clearCookie("gral_token");
     res.status(200).json({
       success: true,
       message: "La sesión se cerró correctamente!",
@@ -433,5 +433,52 @@ exports.logoutUser = async (req, res) => {
     res.status(500).json({ status: "500", message: error.message });
   }
 };
+
+
+exports.cambioClaveUser = async (req, res) => {
+  console.log(req.body);
+  let encriClave = await bcrypt.hash(req.body.newPassword, 10);
+  const usuario = await Users.findOne({
+    where: { email: req.body.email },
+  });
+  if (!usuario) {
+    return res.json({
+      status: "403",
+      message: "El Usuario, no está Registrado...",
+    });
+  } else {
+    console.log(req.body.oldPassword);
+    console.log(usuario);
+    const compare = await comparePassword(
+      req.body.oldPassword,
+      usuario.password
+    );
+    if (!compare) {
+      return res.json({ status: "403", message: "Clave actual incorrecta..." });
+    }
+  }
+
+  await Users.findOne({ where: { email: req.body.email } }).then((user) => {
+    if (user) {
+      let usuario = user;
+      usuario = {
+        password: encriClave,
+      };
+
+      user
+        .update(usuario)
+        .then(function () {
+          res.json({
+            status: "200",
+            message: "Contraseña Actualizada Correctamente...",
+          });
+        })
+        .catch((err) => {
+          res.json({ status: "500", message: err.message });
+        });
+    }
+  });
+};
+
 
 /* **************************** Fin de Seccion   ************************** */

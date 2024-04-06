@@ -11,6 +11,7 @@ const {
   deleteUser,
   updateUser,
   loginUser,
+  cambioClaveUser,
   logoutUser,
 } = require("../../controller/mysql/users");
 
@@ -25,7 +26,8 @@ router.post("/user", validarData, createUser);
 router.put("/user/:id", validarData, updateUser);
 router.delete("/user/:id", deleteUser);
 router.post("/user/login", loginUser);
-router.post("/user/logout", logoutUser);
+router.get("/user/logout", logoutUser);
+router.put("/user/cambio", cambioClaveUser);
 
 function validarData(req, res, next) {
   console.log("Body....", req.body);
