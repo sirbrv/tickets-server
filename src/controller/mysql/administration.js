@@ -7,6 +7,7 @@ const Tickets = db.tickets;
 const StudentHistory = db.studentHistory;
 const GestionVentas = db.gestionVentas;
 const Op = Sequelize.Op;
+let costoTotalTicket = 0;
 
 /*********************** Seccion de gestión de Academias  ***************** */
 
@@ -374,88 +375,88 @@ exports.getStudent = async (req, res) => {
 };
 
 exports.updateStudent = async (req, res, next) => {
+  let numOb = 0;
+  let numEx = 0;
+  if (req.body.ticketOb1) {
+    await grabaTicket(req.body.ticketOb1, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb2) {
+    await grabaTicket(req.body.ticketOb2, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb3) {
+    await grabaTicket(req.body.ticketOb3, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb4) {
+    await grabaTicket(req.body.ticketOb4, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb5) {
+    await grabaTicket(req.body.ticketOb5, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+  if (req.body.ticketOb6) {
+    await grabaTicket(req.body.ticketOb6, req.body.nombre, req.body.dni, "obl");
+    numOb = numOb + 1;
+  }
+
+  if (req.body.ticketEx1) {
+    await grabaTicket(req.body.ticketEx1, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx2) {
+    await grabaTicket(req.body.ticketEx2, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx3) {
+    await grabaTicket(req.body.ticketEx3, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx4) {
+    await grabaTicket(req.body.ticketEx4, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx5) {
+    await grabaTicket(req.body.ticketEx5, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  if (req.body.ticketEx6) {
+    await grabaTicket(req.body.ticketEx6, req.body.nombre, req.body.dni, "ext");
+    numEx = numEx + 1;
+  }
+  let existeitem = {
+    dni: req.body.dni,
+    nombre: req.body.nombre,
+    email: req.body.email,
+    celular: req.body.celular,
+    adress: req.body.adress,
+    EntObligatorias: numOb,
+    EntExtras: numEx,
+    academia: req.body.academia,
+    ticketOb1: req.body.ticketOb1,
+    ticketOb2: req.body.ticketOb2,
+    ticketOb3: req.body.ticketOb3,
+    ticketOb4: req.body.ticketOb4,
+    ticketOb5: req.body.ticketOb5,
+    ticketOb6: req.body.ticketOb6,
+    ticketEx1: req.body.ticketEx1,
+    ticketEx2: req.body.ticketEx2,
+    ticketEx3: req.body.ticketEx3,
+    ticketEx4: req.body.ticketEx4,
+    ticketEx5: req.body.ticketEx5,
+    ticketEx6: req.body.ticketEx6,
+  };
+
+
+  resumenGestion(req.body.dni, req.body.nombre, numOb, numEx);
   await Students.findOne({ where: { id: req.params.id } }).then((item) => {
     if (item) {
-      let numOb = 0;
-      let numEx = 0;
-      if (req.body.ticketOb1) {
-        grabaTicket(req.body.ticketOb1, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-      if (req.body.ticketOb2) {
-        grabaTicket(req.body.ticketOb2, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-      if (req.body.ticketOb3) {
-        grabaTicket(req.body.ticketOb3, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-      if (req.body.ticketOb4) {
-        grabaTicket(req.body.ticketOb4, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-      if (req.body.ticketOb5) {
-        grabaTicket(req.body.ticketOb5, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-      if (req.body.ticketOb6) {
-        grabaTicket(req.body.ticketOb6, req.body.nombre, req.body.dni, "obl");
-        numOb = numOb + 1;
-      }
-
-      if (req.body.ticketEx1) {
-        grabaTicket(req.body.ticketEx1, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      if (req.body.ticketEx2) {
-        grabaTicket(req.body.ticketEx2, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      if (req.body.ticketEx3) {
-        grabaTicket(req.body.ticketEx3, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      if (req.body.ticketEx4) {
-        grabaTicket(req.body.ticketEx4, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      if (req.body.ticketEx5) {
-        grabaTicket(req.body.ticketEx5, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      if (req.body.ticketEx6) {
-        grabaTicket(req.body.ticketEx6, req.body.nombre, req.body.dni, "ext");
-        numEx = numEx + 1;
-      }
-      let existeitem = {
-        dni: req.body.dni,
-        nombre: req.body.nombre,
-        email: req.body.email,
-        celular: req.body.celular,
-        adress: req.body.adress,
-        EntObligatorias: numOb,
-        EntExtras: numEx,
-        academia: req.body.academia,
-        ticketOb1: req.body.ticketOb1,
-        ticketOb2: req.body.ticketOb2,
-        ticketOb3: req.body.ticketOb3,
-        ticketOb4: req.body.ticketOb4,
-        ticketOb5: req.body.ticketOb5,
-        ticketOb6: req.body.ticketOb6,
-        ticketEx1: req.body.ticketEx1,
-        ticketEx2: req.body.ticketEx2,
-        ticketEx3: req.body.ticketEx3,
-        ticketEx4: req.body.ticketEx4,
-        ticketEx5: req.body.ticketEx5,
-        ticketEx6: req.body.ticketEx6,
-      };
-
       const item_data = item
         .update(existeitem)
         .then(function () {
-          resumenGestion(req.body.dni, req.body.nombre, numOb, numEx);
           const data = Students.findAll();
-          //  console.log("datod.....:", data);
           res.status(200).json({
             status: "200",
             data: existeitem,
@@ -498,10 +499,10 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
   // *************************************************//
   // Se actualiza catalogo de Tickets
   // *************************************************//
-  let fsTicket0 = {};
   await Tickets.findOne({ where: { codigoEntrada: ticketNum } }).then(
     (item) => {
       if (item) {
+        costoTotalTicket = costoTotalTicket + item.costo;
         let existeitem = {
           estatus: item.estatus != "Vendida" ? "Asignada" : item.estatus,
           responsable: nombre,
@@ -525,8 +526,7 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
   const fsHisTicket = await StudentHistory.findOne({
     where: { dni: dni },
   });
-  console.log("entrada.....:", fsTicket);
-  console.log("fsHisTicket.....:", fsHisTicket);
+
   if (!fsHisTicket) {
     let newRegister = {
       dni: dni,
@@ -574,13 +574,13 @@ exports.getStudentHistoy = async (req, res) => {
 // **********************fin ***************************//
 
 const resumenGestion = async (dni, nombre, numOb, numEx) => {
+
   let datos = {
     dni: dni,
     nombre: nombre,
     ticketAsignado: numOb + numEx,
     ticketPagado: 0,
     montoTotalPagado: 0,
-    montoTotalTicket: 0,
     montoEfectivo: 0,
     montoTransf: 0,
     montoCredito: 0,
@@ -593,12 +593,14 @@ const resumenGestion = async (dni, nombre, numOb, numEx) => {
 
   if (!existe) {
     await GestionVentas.create(datos);
+    return;
   }
 
   await GestionVentas.findOne({ where: { dni: dni } }).then((item) => {
     if (item) {
       let existeitem = {
         ticketAsignado: numOb + numEx,
+        montoTotalTicket: parseFloat(costoTotalTicket),
       };
       const item_data = item
         .update(existeitem)
@@ -610,4 +612,5 @@ const resumenGestion = async (dni, nombre, numOb, numEx) => {
         });
     }
   });
+  costoTotalTicket = 0;
 };
