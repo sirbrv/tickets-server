@@ -6,10 +6,16 @@ require("./config/config.js");
 const port = process.env.PORT;
 const host = process.env.HOST;
 const app = express();
-
+//  origin: [
+//    "http://localhost:5173",
+//    "http://tickets-server.onrender.com",
+//    "https://tickets-server.onrender.com"],
+//    optionsSuccessStatus: 200,
 app.use(morgan("dev"));
-
-app.use(cors());
+const corsOptions = {
+  origen: "*",
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/imagens", express.static(path.join(__dirname, "/public")));

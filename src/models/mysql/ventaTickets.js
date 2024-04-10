@@ -1,5 +1,4 @@
 module.exports = (sequelize, DataTypes) => {
-    
   const VentaTickets = sequelize.define("ventaTickets", {
     codigoEntrada: { type: DataTypes.STRING, allowNull: false },
     academia: { type: DataTypes.STRING, allowNull: true },
@@ -11,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     responsable: { type: DataTypes.STRING, allowNull: true },
     montoPago: { type: DataTypes.INTEGER, allowNull: true },
     formaPago: { type: DataTypes.STRING, allowNull: true },
+    urlAcademia: { type: DataTypes.STRING, allowNull: true },
     fechaVenta: { type: DataTypes.DATE, allowNull: true },
   });
 

@@ -449,7 +449,6 @@ exports.updateStudent = async (req, res, next) => {
     ticketEx6: req.body.ticketEx6,
   };
 
-
   resumenGestion(req.body.dni, req.body.nombre, numOb, numEx);
   await Students.findOne({ where: { id: req.params.id } }).then((item) => {
     if (item) {
@@ -507,7 +506,7 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
           estatus: item.estatus != "Vendida" ? "Asignada" : item.estatus,
           responsable: nombre,
         };
-        fsTicket0 = item
+        let fsTicket0 = item
           .update(existeitem)
           .then(function () {})
           .catch((err) => {
@@ -523,8 +522,9 @@ const grabaTicket = async (ticketNum, nombre, dni, tipo) => {
   const fsTicket = await Tickets.findOne({
     where: { codigoEntrada: ticketNum },
   });
+
   const fsHisTicket = await StudentHistory.findOne({
-    where: { dni: dni },
+    where: { dni: dni, codigoEntrada: ticketNum },
   });
 
   if (!fsHisTicket) {
@@ -574,7 +574,6 @@ exports.getStudentHistoy = async (req, res) => {
 // **********************fin ***************************//
 
 const resumenGestion = async (dni, nombre, numOb, numEx) => {
-
   let datos = {
     dni: dni,
     nombre: nombre,

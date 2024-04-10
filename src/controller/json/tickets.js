@@ -318,7 +318,8 @@ const getVefify = async (req, res) => {
 
   let html = `<div style="padding: 20px 20px; font-size: 10px">
               <h1 style="text-align: center;"> Verificación de Entradas</><bR>
-              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+              <p style="text-align: ceter; font-weight: 100;">
+              Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
               <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
               <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
               </div>

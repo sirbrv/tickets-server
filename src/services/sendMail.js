@@ -2,8 +2,9 @@ const nodemailer = require("nodemailer");
 const QRCode = require("qrcode");
 const fs = require("fs");
 const enviarMail = async (options) => {
+  // console.log("En envio de mail.....:", options);
   // https://tickets-server.onrender.com
-  https: try {
+  try {
     // Generar el código QR de forma asíncrona
     const imgData = await QRCode.toDataURL(
       `${options.url}/api/v2/verify/${options.numTicket}`
@@ -28,7 +29,7 @@ const enviarMail = async (options) => {
       from: process.env.SMPT_MAIL,
       to: options.email,
       subject: options.subject,
-      text: "Halo ini dari node js", // plain text body
+      text: "Compra de Entrdas", // plain text body
       attachDataUrls: true, //to accept base64 content in messsage
       // html: 'Halo ini barcodenya </br> <img src="' + imgData + '">', // html body
 

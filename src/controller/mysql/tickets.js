@@ -3,9 +3,10 @@ const db = require("../../config/configDB");
 const Tickets = db.tickets;
 const VentaTickets = db.ventaTickets;
 const Academys = db.academys;
-const Op = Sequelize.Op;
-
+const StudentHistory = db.studentHistory;
+const GestionVentas = db.gestionVentas;
 const enviarMail = require("../../services/sendMail");
+const Op = Sequelize.Op;
 
 /*********************** Seccion de gestión de Tickets  ***************** */
 
@@ -59,7 +60,9 @@ exports.getTicket = async (req, res) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
+    return res
+      .status(400)
+      .json({ status: "403", message: "El ID no está registrado" });
   }
   res.status(200).json({ status: "200", data: existeitem });
 };
@@ -96,11 +99,15 @@ exports.deleteTicket = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
+    return res
+      .status(400)
+      .json({ status: "403", message: "El ID no está registrado" });
   }
   try {
     await Tickets.destroy({ where: { id: req.params.id } });
-    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
+    return res
+      .status(200)
+      .json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
     res.status(400).json({ status: "400", message: error });
   }
@@ -182,6 +189,7 @@ exports.generaTicket = async (req, res, next) => {
 /* **          Sección de  envio de correos              */
 /* *******************************************************/
 exports.enviaTicket = async (req, res, next) => {
+  // console.log("Envia Correo.....:", req.body);
   enviarMail({
     url: req.body.urlAcademia,
     numTicket: req.body.codigoEntrada,
@@ -239,8 +247,30 @@ exports.AddTicket = async (req, res) => {
     responsable: req.body.responsable,
     montoPago: req.body.montoPago,
     formaPago: req.body.formaPago,
+    urlAcademia: req.body.urlAcademia,
     fechaVenta: Date.now(),
   };
+  let efectivo = 0;
+  let tensferencia = 0;
+  let debito = 0;
+  let credito = 0;
+  let deposito = 0;
+  // console.log(req.body.metodoPago);
+  if (req.body.metodoPago === "Efectivo") {
+    efectivo = 1;
+  }
+  if (req.body.metodoPago === "Transferencia") {
+    tensferencia = 1;
+  }
+  if (req.body.metodoPago === "Deposito") {
+    deposito = 1;
+  }
+  if (req.body.metodoPago === "Débito") {
+    debito = 1;
+  }
+  if (req.body.metodoPago === "Crédito") {
+    credito = 1;
+  }
 
   try {
     const ticket = await VentaTickets.findOne({
@@ -257,7 +287,6 @@ exports.AddTicket = async (req, res) => {
     // *************************************************//
     // Se actualiza catalogo de Tickets
     // *************************************************//
-
     const fsTicket = await Tickets.findOne({
       where: { codigoEntrada: req.body.codigoEntrada },
     });
@@ -295,6 +324,20 @@ exports.AddTicket = async (req, res) => {
           });
       }
     });
+
+    const fsHisTicket = await StudentHistory.findOne({
+      where: { codigoEntrada: req.body.codigoEntrada },
+    });
+    if (fsHisTicket) {
+      resumenGestion(
+        fsHisTicket.dni,
+        1,
+        req.body.montoPago,
+        efectivo,
+        tensferencia,
+        credito
+      );
+    }
     // **********************fin ***************************//
     return res.status(200).send({
       data: nuevoticket,
@@ -333,17 +376,42 @@ exports.deleteTicketsVendido = async (req, res, next) => {
     where: { id: req.params.id },
   });
   if (!existeitem) {
-    return res.status(400).json({ status: "403", message: "El ID no está registrado" });
+    return res
+      .status(400)
+      .json({ status: "403", message: "El ID no está registrado" });
   }
   try {
     await VentaTickets.destroy({ where: { id: req.params.id } });
-    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
+    return res
+      .status(200)
+      .json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
     res.status(400).json({ status: "400", message: error });
   }
 };
 
 exports.updateTicketsVendido = async (req, res) => {
+  let efectivo = 0;
+  let tensferencia = 0;
+  let debito = 0;
+  let credito = 0;
+  let deposito = 0;
+  if (req.body.metodoPago === "Efectivo") {
+    efectivo = 1;
+  }
+  if (req.body.metodoPago === "Transferencia") {
+    tensferencia = 1;
+  }
+  if (req.body.metodoPago === "Deposito") {
+    deposito = 1;
+  }
+  if (req.body.metodoPago === "Débito") {
+    debito = 1;
+  }
+  if (req.body.metodoPago === "Crédito") {
+    credito = 1;
+  }
+
   const ticket = await VentaTickets.findOne({
     where: { id: req.params.id },
   });
@@ -411,6 +479,19 @@ exports.updateTicketsVendido = async (req, res) => {
           });
       }
     });
+    const fsHisTicket = await StudentHistory.findOne({
+      where: { codigoEntrada: req.body.codigoEntrada },
+    });
+    if (fsHisTicket) {
+      resumenGestion(
+        fsHisTicket.dni,
+        1,
+        req.body.montoPago,
+        efectivo,
+        tensferencia,
+        credito
+      );
+    }
     // **********************fin ***************************//
     return res.status(200).send({
       // data: nuevoticket,
@@ -430,40 +511,60 @@ exports.updateTicketsVendido = async (req, res) => {
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
 exports.getVefify = async (req, res) => {
-  const ticket = await Tickets.findOne({
-    where: { codigoEntrada: req.params.codigo },
-  });
+  try {
+    const ticket = await Tickets.findOne({
+      where: { codigoEntrada: req.params.codigo },
+    });
 
-  if (!ticket) {
-    return res.status(400).send({
-      data: "",
-      message: "El número de Entrada Indicado, No Existe..",
+    if (!ticket) {
+      return res.status(400).send({
+        data: "",
+        message: "El número de Entrada Indicado, No Existe..",
+        exito: false,
+      });
+    } else {
+      return res.status(200).json({
+        data: ticket,
+        message: "Consulta Exitosa",
+        exito: true,
+      });
+    }
+  } catch (error) {
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
       exito: false,
     });
   }
+};
 
-  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
-
-  let html = `<div style="padding: 20px 20px; font-size: 10px">
-              <h1 style="text-align: center;"> Verificación de Entradas</><bR>
-              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-              <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
-              <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-              </div>
-              `;
-  // <a href="https://tickets-server.onrender.com/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-
-  if (saldo > 0 || ticket.estatusPago != "pagada") {
-    html = `<div style="padding: 20px 50px; font-size: 10px">
-                <h1 style="text-align: center; ">Verificación de Entradas</><bR>
-                <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-                <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
-                <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
-              <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-              </div>
-              
-              `;
-    // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-  }
-  return res.status(200).send(html);
+const resumenGestion = async (
+  dni,
+  numTickets,
+  totalTickets,
+  numTicketsEfec,
+  numTicketsTrans,
+  numTicketsCred
+) => {
+  // console.log("DNI......:", dni);
+  await GestionVentas.findOne({ where: { dni: dni } }).then((item) => {
+    if (item) {
+      let existeitem = {
+        ticketPagado: item.ticketPagado + parseFloat(numTickets),
+        montoTotalPagado: item.montoTotalPagado + parseFloat(totalTickets),
+        montoEfectivo: item.montoEfectivo + parseFloat(numTicketsEfec),
+        montoTransf: item.montoTransf + parseFloat(numTicketsTrans),
+        montoCredito: item.montoCredito + parseFloat(numTicketsCred),
+      };
+      const item_data = item
+        .update(existeitem)
+        .then(function () {})
+        .catch((err) => {
+          res.status(500).send({
+            message: err.message,
+          });
+        });
+    }
+  });
+  costoTotalTicket = 0;
 };
