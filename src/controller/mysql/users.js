@@ -61,7 +61,9 @@ const getPagingData = (data, page, limit) => {
 exports.getUser = async (req, res) => {
   const usuario = await Users.findOne({ where: { id: req.params.id } });
   if (!usuario) {
-    return res.status(400).json({ status: "400", message: "El ID no está registrado" });
+    return res
+      .status(400)
+      .json({ status: "400", message: "El ID no está registrado" });
   }
   res.status(200).json({
     status: "200",
@@ -75,7 +77,9 @@ exports.createUser = async (req, res) => {
     where: { email: req.body.email },
   });
   if (usuario) {
-    return res.status(400).json({ status: "400", message: "Usuário registrado" });
+    return res
+      .status(400)
+      .json({ status: "400", message: "Usuário registrado" });
   }
   let encriClave = "";
   if (req.body.password) {
@@ -143,7 +147,6 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-
   let encriClave = "";
   if (req.body.password) {
     encriClave = await bcrypt.hash(req.body.password, 10);
@@ -194,11 +197,15 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
   const usuario = await Users.findOne({ where: { id: req.params.id } });
   if (!usuario) {
-    return res.status(400).json({ status: "400", message: "El ID no está registrado" });
+    return res
+      .status(400)
+      .json({ status: "400", message: "El ID no está registrado" });
   }
   try {
     await Users.destroy({ where: { id: req.params.id } });
-    return res.status(200).json({ status: "200", message: "Registro Eliminado." });
+    return res
+      .status(200)
+      .json({ status: "200", message: "Registro Eliminado." });
   } catch (error) {
     res.status(500).json({ status: "500", message: error });
   }
@@ -240,7 +247,7 @@ exports.loginUser = async (req, res) => {
       token: usuario.token,
     };
     // let token = generarJWT(userToken);
-    let token = 1234
+    let token = 1234;
     res.cookie("gral_token", token, options).send({
       status: "200",
       data: data,
@@ -250,26 +257,30 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.cambioClaveUser = async (req, res) => {
+  console.log("Entre....:", req.body);
   let encriClave = await bcrypt.hash(req.body.newPassword, 10);
+  console.log("Encrita....:", encriClave);
   const usuario = await Users.findOne({
     where: { email: req.body.email },
   });
+  console.log("usuario..........:", );
   if (!usuario) {
-    return res.status(400).json({
-      status: "400",
-      message: "El Usuário, no está Registrado...",
-    });
+     return res
+        .status(400)
+        .json({ status: "400", message: "El Usuário, no está Registrado..." });
   } else {
-
+    console.log("pase a verificación.....:")
     const compare = await comparePassword(
       req.body.oldPassword,
       usuario.password
     );
     if (!compare) {
-      return res.status(400).json({ status: "400", message: "Clave actual incorrecta..." });
+      return res
+        .status(400)
+        .json({ status: "400", message: "Clave actual incorrecta..." });
     }
   }
-
+console.log("Pase a grabar.....")
   await Users.findOne({ where: { email: req.body.email } }).then((user) => {
     if (user) {
       let usuario = user;
@@ -315,7 +326,9 @@ exports.tokenUsers = async (req, res) => {
       }
     })
     .catch((err) => {
-      return res.status(400).json({ status: "400", message: "Token no válido" });
+      return res
+        .status(400)
+        .json({ status: "400", message: "Token no válido" });
     });
 };
 
@@ -434,8 +447,7 @@ exports.logoutUser = async (req, res) => {
   }
 };
 
-
-exports.cambioClaveUser = async (req, res) => {
+exports.cambioClaveUser2 = async (req, res) => {
   console.log(req.body);
   let encriClave = await bcrypt.hash(req.body.newPassword, 10);
   const usuario = await Users.findOne({
@@ -479,6 +491,5 @@ exports.cambioClaveUser = async (req, res) => {
     }
   });
 };
-
 
 /* **************************** Fin de Seccion   ************************** */

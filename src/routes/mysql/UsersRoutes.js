@@ -22,12 +22,12 @@ const {
 router.get("/users", getUsers);
 router.get("/user/:id", getUser);
 // router.get("/user/:dni", getUserDni);
+router.put("/user/cambio", cambioClaveUser);
 router.post("/user", validarData, createUser);
 router.put("/user/:id", validarData, updateUser);
 router.delete("/user/:id", deleteUser);
 router.post("/user/login", loginUser);
 router.get("/user/logout", logoutUser);
-router.put("/user/cambio", cambioClaveUser);
 
 function validarData(req, res, next) {
   console.log("Body....", req.body);

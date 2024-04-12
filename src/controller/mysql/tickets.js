@@ -250,6 +250,7 @@ exports.AddTicket = async (req, res) => {
     urlAcademia: req.body.urlAcademia,
     fechaVenta: Date.now(),
   };
+  let ticketMontoPago = 0;
   let efectivo = 0;
   let tensferencia = 0;
   let debito = 0;
@@ -306,6 +307,7 @@ exports.AddTicket = async (req, res) => {
       where: { codigoEntrada: req.body.codigoEntrada },
     }).then((item) => {
       if (item) {
+        ticketMontoPago = item.metodoPago;
         let existeitem = {
           saldo: saldo,
           estatus: estatus,
@@ -328,6 +330,7 @@ exports.AddTicket = async (req, res) => {
     const fsHisTicket = await StudentHistory.findOne({
       where: { codigoEntrada: req.body.codigoEntrada },
     });
+
     if (fsHisTicket) {
       resumenGestion(
         fsHisTicket.dni,
@@ -341,7 +344,7 @@ exports.AddTicket = async (req, res) => {
     // **********************fin ***************************//
     return res.status(200).send({
       data: nuevoticket,
-      message: "Venta realizada de forma éxitosa",
+      message: "Venta realizada de forma exitosa",
       exito: true,
     });
   } catch (error) {
@@ -392,6 +395,7 @@ exports.deleteTicketsVendido = async (req, res, next) => {
 
 exports.updateTicketsVendido = async (req, res) => {
   let efectivo = 0;
+  let ticketMontoPago = 0;
   let tensferencia = 0;
   let debito = 0;
   let credito = 0;
@@ -426,6 +430,7 @@ exports.updateTicketsVendido = async (req, res) => {
     await VentaTickets.findOne({ where: { id: req.params.id } }).then(
       (item) => {
         if (item) {
+          ticketMontoPago = item.montoPago;
           let existeitem = {
             emailComprador: req.body.emailComprador,
             nombreComprador: req.body.nombreComprador,
@@ -483,10 +488,14 @@ exports.updateTicketsVendido = async (req, res) => {
       where: { codigoEntrada: req.body.codigoEntrada },
     });
     if (fsHisTicket) {
+      let monto = 0;
+      if (parseFloat(ticketMontoPago) < parseFloat(req.body.montoPago)) {
+        monto = parseFloat(req.body.montoPago) - parseFloat(ticketMontoPago);
+      }
       resumenGestion(
         fsHisTicket.dni,
         1,
-        req.body.montoPago,
+        monto,
         efectivo,
         tensferencia,
         credito
@@ -494,8 +503,7 @@ exports.updateTicketsVendido = async (req, res) => {
     }
     // **********************fin ***************************//
     return res.status(200).send({
-      // data: nuevoticket,
-      message: "Venta actualizadad de forma éxitosa",
+      message: "Venta actualizada de forma exitosa",
       exito: true,
     });
   } catch (error) {
@@ -519,7 +527,7 @@ exports.getVefify = async (req, res) => {
     if (!ticket) {
       return res.status(400).send({
         data: "",
-        message: "El número de Entrada Indicado, No Existe..",
+        message: "El número de Entrada Indicado, No Exíste..",
         exito: false,
       });
     } else {
