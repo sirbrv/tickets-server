@@ -40,10 +40,10 @@ app.use("/api/v2", require("./routes/mysql/adminRouter.js"));
 app.use("/api/v2", require("./routes/mysql/ticketsRouter.js"));
 app.use("/api/v2", require("./routes/mysql/VerifyRoutes.js"));
 
-// app.use("*", (req, res) => {
-//   console.log("Request Type:", req.method);
-//   console.log("Request URL:", req.originalUrl);
-// });
+app.use("*", (req, res) => {
+  console.log("Request Type:", req.method);
+  console.log("Request URL:", req.originalUrl);
+});
 
 app.use((red, res, next) => {
   res.status(404).sendFile(__dirname + "/public/html/404.html");

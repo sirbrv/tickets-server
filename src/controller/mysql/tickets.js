@@ -5,6 +5,7 @@ const VentaTickets = db.ventaTickets;
 const Academys = db.academys;
 const StudentHistory = db.studentHistory;
 const GestionVentas = db.gestionVentas;
+const VerifyEvents = db.verifyEvents;
 const enviarMail = require("../../services/sendMail");
 const Op = Sequelize.Op;
 
@@ -203,37 +204,38 @@ exports.enviaTicket = async (req, res, next) => {
 //* *************************************************************** *//
 //                 Verifica datos escaneados en el QR               //
 //* *************************************************************** *//
-exports.getVefify = async (req, res) => {
-  const ticket = await Tickets.findOne({
-    where: {
-      codigoEntrada: req.body.codigo,
-    },
-  });
-  let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
+// exports.getVefifyd = async (req, res) => {
+//   console.log("Entrada....:", req.params);
+//   const ticket = await Tickets.findOne({
+//     where: {
+//       codigoEntrada: req.body.codigo,
+//     },
+//   });
+//   let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
 
-  let html = `<div style="padding: 20px 20px; font-size: 10px">
-              <h1 style="text-align: center;"> Verificación de Entradas</><bR>
-              <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-              <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
-              <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-              </div>
-              `;
-  // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+//   let html = `<div style="padding: 20px 20px; font-size: 10px">
+//               <h1 style="text-align: center;"> Verificación de Entradas</><bR>
+//               <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+//               <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: green;">Solvente</scan>...
+//               <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+//               </div>
+//               `;
+//   // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
 
-  if (saldo > 0 || ticket.estatusPago != "pagada") {
-    html = `<div style="padding: 20px 50px; font-size: 10px">
-                <h1 style="text-align: center; ">Verificación de Entradas</><bR>
-                <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
-                <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
-                <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
-              <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-              </div>
-              
-              `;
-    // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
-  }
-  return res.status(200).send(html);
-};
+//   if (saldo > 0 || ticket.estatusPago != "pagada") {
+//     html = `<div style="padding: 20px 50px; font-size: 10px">
+//                 <h1 style="text-align: center; ">Verificación de Entradas</><bR>
+//                 <p style="text-align: ceter; font-weight: 100;">Hemos realizado la vefificación de la Entrada ${ticket.codigoEntrada} perteneciente a </p>
+//                 <p style="text-align: ceter; font-weight: 100;">${ticket.comprador} la cual se encuentra <scan style="font-weight: 600; color: red;">no solvente</scan>...
+//                 <p style="text-align: ceter; font-weight: 100; margin-top: 30px;">A la fecha presenta una deuda de ${saldo} $ sobre el costo de la entrada de ${ticket.costo}$. </p>
+//               <a href="http://localhost:5173/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+//               </div>
+
+//               `;
+//     // <a href="https://ticketselectra.netlify.app/qrTicket" class="btn btn-success"> Ir a la Sección de Scaner </a>
+//   }
+//   return res.status(200).send(html);
+// };
 
 exports.AddTicket = async (req, res) => {
   let nuevoticket = {
@@ -393,6 +395,25 @@ exports.deleteTicketsVendido = async (req, res, next) => {
   }
 };
 
+exports.getTicketsVendidoCodigo = async (req, res) => {
+  try {
+    const ticket = await VentaTickets.findOne({
+      where: {
+        codigoEntrada: req.params.codigo,
+      },
+    });
+    return res
+      .status(200)
+      .json({ data: ticket, message: "Consulta Exitosa", exito: true });
+  } catch (error) {
+    // Devolver un mensaje de error genérico en caso de error
+    return res.status(500).json({
+      message: "Ocurrió un error al procesar la solicitud",
+      exito: false,
+    });
+  }
+};
+
 exports.updateTicketsVendido = async (req, res) => {
   let efectivo = 0;
   let ticketMontoPago = 0;
@@ -531,6 +552,23 @@ exports.getVefify = async (req, res) => {
         exito: false,
       });
     } else {
+      let saldo = parseFloat(ticket.costo) - parseFloat(ticket.montoPagado);
+      const newRegist = {
+        academia: ticket.academia,
+        event: ticket.evento,
+        ticket: ticket.codigoEntrada,
+        comprador: ticket.comprador,
+        montoPagado: parseFloat(ticket.montoPagado),
+        montoTicket: parseFloat(ticket.costo),
+        solvencia: saldo === 0 ? 0 : 1,
+      };
+
+      const dbTicket = await VerifyEvents.findOne({
+        where: { ticket: ticket.codigoEntrada },
+      });
+      if (!dbTicket) {
+        await VerifyEvents.create(newRegist);
+      }
       return res.status(200).json({
         data: ticket,
         message: "Consulta Exitosa",
@@ -554,7 +592,6 @@ const resumenGestion = async (
   numTicketsTrans,
   numTicketsCred
 ) => {
-  // console.log("DNI......:", dni);
   await GestionVentas.findOne({ where: { dni: dni } }).then((item) => {
     if (item) {
       let existeitem = {
@@ -574,5 +611,20 @@ const resumenGestion = async (
         });
     }
   });
-  costoTotalTicket = 0;
+};
+
+exports.getVerifyEvents = async (req, res) => {
+  VerifyEvents.findAll()
+    .then((data) => {
+      res.status(200).json({
+        status: "200",
+        message: "Información Registrada...",
+        data: data,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "No hay Información Registrada..",
+      });
+    });
 };

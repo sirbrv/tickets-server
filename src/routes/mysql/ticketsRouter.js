@@ -17,8 +17,9 @@ router.put("/ticket/:id", ticketController.updateTicket);
 /** ************************************************ */
 /* Rutas de acceso al catálogo de Venta de Tickets   */
 /** ************************************************ */
-
+;
 router.get("/ticketVentas", ticketController.getTicketsVendidos);
+router.get("/ticketVenta/:codigo", ticketController.getTicketsVendidoCodigo);
 router.put("/ticketVenta/:id", ticketController.updateTicketsVendido);
 router.post("/ticketVenta/:id", ticketController.updateTicketsVendido);
 router.delete("/ticketVenta/:id", ticketController.deleteTicketsVendido);

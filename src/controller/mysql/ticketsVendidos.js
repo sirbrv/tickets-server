@@ -13,7 +13,6 @@ const ventaTicketsFile = "src/json/ventaTickets.json";
 //* *************************************************************** *//
 
 exports.getTicketsVendidos = async (req, res) => {
-
   VentaTickets.findAll()
     .then((data) => {
       res.status(200).json({
@@ -35,6 +34,7 @@ const getTicketsVendido = async (req, res) => {
     const datos = await fs.readFile(ventaTicketsFile, "utf-8");
     const tickets = JSON.parse(datos);
     const ticket = tickets.find((ticket) => ticket.id === id);
+
     return res
       .status(200)
       .json([{ data: ticket, message: "Consulta Exitosa", exito: true }]);

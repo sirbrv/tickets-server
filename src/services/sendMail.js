@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const QRCode = require("qrcode");
 const fs = require("fs");
 const enviarMail = async (options) => {
-  // console.log("En envio de mail.....:", options);
+  console.log("En envio de mail.....:", options);
   // https://tickets-server.onrender.com
   try {
     // Generar el código QR de forma asíncrona
@@ -24,7 +24,6 @@ const enviarMail = async (options) => {
         rejectUnauthorized: false,
       },
     });
-
     const mailOptions = {
       from: process.env.SMPT_MAIL,
       to: options.email,
@@ -59,10 +58,11 @@ const enviarMail = async (options) => {
     };
     // Enviar correo electrónico
     const info = await transporter.sendMail(mailOptions);
-    // console.log("Se ha enviado el correo electrónico correctamente.");
+    console.log("Se ha enviado el correo electrónico correctamente.");
+    console.log(info.response);
     return info.response;
   } catch (error) {
-    // console.log("Error al enviar el correo electrónico:", error);
+    console.log("Error al enviar el correo electrónico:", error);
     return error;
   }
 };
