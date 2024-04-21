@@ -43,7 +43,7 @@ db.students = require("../models/mysql/students.js")(sequelize, DataTypes);
 db.studentHistory = require("../models/mysql/studentHistory.js")(
   sequelize,
   DataTypes
-);
+); 
 db.tickets = require("../models/mysql/tickets.js")(sequelize, DataTypes);
 db.ventaTickets = require("../models/mysql/ventaTickets")(sequelize, DataTypes);
 db.verifyEvents = require("../models/mysql/verifyEvents")(sequelize, DataTypes);
@@ -51,7 +51,6 @@ db.gestionVentas = require("../models/mysql/gestionVentas.js")(
   sequelize,
   DataTypes
 );
-;
 db.sequelize.sync({ force: false }).then(() => {
   console.log("Inicialización del proyecto terminado correctamente!");
 });

@@ -3,7 +3,7 @@ if (process.env.NODE_ENV == "Desarrollo") {
   require("dotenv").config({
     path: path.join(__dirname, "../envirome/devEnvirome.env"),
   });
-}
+} 
 const port = process.env.PORT;
 const portdb = process.env.DB_PORT;
 const host = process.env.DB_HOST;
